@@ -1,0 +1,43 @@
+{% extends 'GeneralBase.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+{% block header %}
+{% endblock %}
+{% block content %}
+
+<section class="page-section bg-dark text-light shadow-lg">
+
+    <!-- form Start -->
+    <div class="container-fluid overflow-hidden bg-dark px-lg-0">
+        <div class="container form px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-6 form-text" data-parallax="scroll">
+                    <div class="d-flex align-content-center  h-100 px-4 px-sm-5 ps-lg-0 img-bg">
+                        <img class="w-100" src="{{'../static/img/' + '4.jpg'}}" alt="Image">
+                        <h1 class="my-4">Delete your Event</h1>
+                        <p class="text-light mb-5 ">Permanently delete your event.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 form-form text-light" data-parallax="scroll">
+                    <div class="h-100 px-4 px-sm-5 pe-lg-0">
+                        <div class="bg-dark p-4 p-sm-5">
+
+
+                            <div class="row g-3">
+                                <h2 class=" text-center">Event Delete Form</h2>
+
+                                {{wtf.render_form(form)}}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- form End -->
+
+
+</section>
+
+{% endblock %}

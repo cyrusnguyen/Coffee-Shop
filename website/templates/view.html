@@ -1,0 +1,206 @@
+{% extends 'GeneralBase.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+
+{% block header %}
+{% endblock %}
+{% block content %}
+
+<!--Start main-->
+<section class="page-section bg-dark text-light shadow-lg">
+    <div class="container-fluid col-xl-10 col-xs-12 p-5">
+        
+
+        <!--Row 1-->
+        <div class="row g-0 bg">
+            <div class="header d-flex justify-content-center">
+                <h1 class="my-5 h1-header">{{event.name}}</h1>
+            </div>
+        </div>
+
+
+
+        <!--Row 2-->
+        <div class="row g-0 bg-dark ">
+            <div class="d-flex col-xl-8 col-lg-12"><img class="img-fluid"
+                    src="../static/img/{{event.image}}" alt="">
+            </div>
+            <div class="d-flex col-lg-4 px-5 p-5">
+                <div class="m-lg-auto m-sm-0">
+                    <h2 class="date mb-3">{{event.date}}</h2>
+                    <P class="mb-1">Hosted by | <a href="#"> {{event.producer}}</a></P>
+                    <P class="mb-1">Price | ${{event.price}}</P>
+                    <P class="mb-1">Status | {{event.status}}</P>
+                    <P class="mb-1">Dancing Style | {{event.style}}</P>
+                    <P class="mb-1">Start Date | {{event.date_start}}</P>
+                    <P class="mb-1">End Date | {{event.date_end}}</P>
+                    <P class="mb-4">Event Location | {{event.address}} {{event.city}},{{event.country}} </P>
+                  
+
+                      
+                    
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <span style="background-color: #df1212" ><strong>Error</strong>: {{ message }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    
+                    {%if current_user.is_authenticated %}
+                        {% if event.status == "Cancelled" or event.status == "Sold Out"%}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticket" disabled>
+                            Get Ticket
+                        </button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticket" >
+                                Get Ticket
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        {% if event.status == "Cancelled" or event.status == "Sold Out"%}
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ticket" disabled>
+                                Get Ticket
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Loginrequired" >
+                                Get Ticket
+                            </button>
+                        {% endif %}
+                    {% endif %}
+
+                    {%  if event.user_id == user.id %}
+                    <a href="{{ url_for('event.update_event') }}" class="card-btm btn btn-primary py-1 px-2"
+                    >Update Event</a>
+                    {% else %}
+
+                    {% endif %}
+                    
+                    {%  if event.user_id == user.id %}
+                    <a href="{{ url_for('event.delete_event') }}" class="card-btm btn btn-primary py-1 px-2"
+                    >Delete Event</a>
+                    {% else %}
+
+                    {% endif %}
+
+                    <!-- The Modal -->
+                    <div class="modal text-dark" id="ticket">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header mx-auto">
+                                    <h3>{{event.name}}</h3>
+                                    
+                                </div>
+                                <div class="modal-price mx-auto">
+                                    <h5>Ticket Price | ${{event.price}}</h5>
+                                </div> 
+                                <!-- Modal body -->
+                                <div class="container mt-3">
+                                    <!-- <form action="/action_page.php"> -->
+                                        <div class="px-5 my-3">
+                                            <p>Remaining Tickets: {{event.ticketLeft}}</p>
+                                            {{wtf.render_form(TicketFrom)}}
+                                            
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal text-dark" id="Loginrequired">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header mx-auto">
+                                    <h3></h3>
+                                </div>
+                                <div class></div>
+                                <div class="modal-text mx-auto">
+                                    <h5>Login is required to purchase tickets
+                                        <br>
+                                        <br>
+                                        Please Login or Register an account
+                                    </h5>
+                                </div>
+                                    <div class="px-5 my-3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+            </div>
+            <div class="d-flex col-xl-4 col-lg-4 p-5">
+                <div class="item_text">
+                    <h2 class="date mb-3">What to expect</h2>
+                    <p class="#">{{event.description}}</p>
+                </div>
+            </div>
+            <div class="d-flex col-xl-4 col-lg-4 py-5">
+                <!--this will also have to change-->
+                <iframe class="img-fluid"
+                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyADqWzreZxiYu7PKLxafDECv0ZH793mdbM
+                &q={{event.address}}"
+                    width="700" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+
+
+
+
+
+        <!--Row 3-->
+        <section class="text-dark">
+            <div class="row d-flex g-0">
+                <div class="col d-flex justify-content-center">
+                
+                    <div class="col-xl-8 col-md-10 col-sm-12 col-xs-12">
+                        <div class="card p-5">
+                            <div class="mb-3">
+                                <h1>Review</h1>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <h3>Write your comment</h3>
+                            </div>
+
+                            {{wtf.render_form(form,"/events/{0}/comment".format(event.id))}} 
+
+                            {% for comment in event.comments %}
+                            <div class="d-flex flex-row mt-5 ">
+                                <div class="w-100 p-4 shadow-lg">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <h5 class="h-comment">{{comment.user.name}}</h5>
+                                        </div> <small>{{comment.created_at.strftime('%d-%m-%Y %H:%M:%S')}}</small>
+                                    </div>
+                                    <p class="text-justify comment-text mb-0">{{comment.text}}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+</section>
+
+</div>
+</section>
+<!--end main-->
+
+
+{% endblock %}

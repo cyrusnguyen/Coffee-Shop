@@ -1,0 +1,147 @@
+{% extends 'GeneralBase.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+{% block header %}
+{% endblock %}
+{% block content %}
+
+<!--Start content-->
+<section class="page-section bg-dark text-light shadow-lg">
+
+    <div class="container-fluid col-xl-6 col-xs-12 p-5">
+
+
+        <!--Row 1-->
+        <div class="row g-0 bg mb-5">
+            <div class="header d-flex justify-content-center">
+                <H1 class="my-5 h1-header">User History</h1>
+            </div>
+        </div>
+
+
+
+        <!--Row 2-->
+        <div class="row g-0">
+            <div class=" d-flex justify-content-center col-md-5 col-sm-8">
+                <img class="img-fluid" src="{{'../static/img/' + 'john1.png'}}" alt="">
+            </div>
+            <div class="d-flex text-light mx-auto col-lg-4 col-md-4 px-5 p-5">
+                <div class="m-lg-auto m-sm-0">
+
+                    <h2 class="date mb-3">{{current_user.name}}</h2>
+                    <P class="mb-1">Email: {{current_user.emailid}}</P>
+                    <P class="mb-1">Address: {{current_user.address}}</P>
+                    <P class="mb-1">Phone: {{current_user.phone_number}}</P>
+                    <br>
+
+
+                    <a type="button" class="btn btn-primary" href="{{ url_for('main.update_user') }}">
+                        Update Information
+                    </a>
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#history_Modal" >
+                        Ticket History
+                    </button>
+                    <!-- The Modal -->
+                    <div class="modal" id="history_Modal">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content text-dark">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h3 class="modal-title ">Ticket History</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <!-- Modal body -->
+                                <div class="modal-body bg-light">
+                                    <h5 class=" text-center">Your tickets</h5>
+                                    <div class="row bg-light shadow p-2 mt-2">
+                                        {% for (event) in (user_tickets) %}
+
+                                        <div class="col-12 p-5 shadow-lg mt-2">
+                                            <div class=" text-center">
+                                                <img src="{{ url_for('static', filename = 'img/' + event.image)}}" class="img-fluid">
+                                                <p>TicketID | {{shown_amount[loop.index]}}</p>
+                                                <p>Event Name | {{event.name}}</p>
+                                                <p>Times | {{event.time_start}} - {{event.time_end}}</p>
+                                                <p>Date | {{event.date_start}}</p>
+                                                <p>Location | {{event.city + ", " + event.country}}</p>
+                                                <p>Price | ${{event.price}}</p>
+                                            </div>
+                                        </div>
+                                       
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class=" col-12 p-5">
+            <div class="item_form">
+                <div class="text">
+                    <h2 class="my-4">Your Unpublished Events</h2>
+                </div>
+
+                <div class="row text-light">
+                    <!--Grid column-->
+
+                    
+                        
+                        {% for event in event %}
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="card">
+                                <img src="{{ url_for('static', filename = 'img/' + event.image)}}" class="img-fluid">
+                                <div class="card-body">
+                                    <h3 class="title"><a href="{{ url_for('event.show', id = event.id) }}">{{event.name}}</a></h3> 
+                                    <p class="text" style="color:black">{{event.style}}</p>
+                                    <h5 class="title">Where</h5>
+                                    <p class="text" style="color:black">{{event.city + ", " + event.country}}</p>
+                                    <h5 class="title">When</h5>
+                                    <p class="text" style="color:black">{{event.date_end}}</p>
+                                    <a href="{{ url_for('event.show', id = event.id) }}" class="card-btm btn btn-primary py-1 px-2"> More</a>
+                                </div>
+                                <div class="{{'card-footer ' ~ event.status.lower() | replace(' ', '_')}}">
+                                    <small class="text-muted ">{{event.status}}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    
+
+                </div>
+            </div>
+        </div>             
+
+        <div class=" col-12 p-5">
+            <div class="item_form">
+                <div class="text">
+                    <h2 class="my-4">Contact us</h2>
+                </div>
+
+                <div class="row text-light">
+                    <!--Grid column-->
+
+                    {{wtf.render_form(form)}}
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+<!--end content-->
+
+{% endblock %}

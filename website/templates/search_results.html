@@ -1,0 +1,38 @@
+{% extends 'GeneralBase.html' %}
+
+{% block header %}
+{% endblock %}
+{% block content %}
+<!-- main -->
+<section class="page-section bg-dark text-dark p-5 shadow-lg">
+    <div class="container-fluid shadow col-xl-10 col-md-12">
+
+        <!-- Cards -->
+        <div class="row mx-auto g-3">
+            {% for result in search_results %}
+            <div class="col-xl-2 col-lg-4 col-md-5 col-sm-6 col-xs-12">
+                <div class="card">
+                    <img src="{{ url_for('static', filename = 'img/' + result.image)}}" class="img-fluid">
+                    <div class="card-body">
+                        <h3 class="title"><a href="{{ url_for('event.show', id = result.id) }}">{{result.name}}</a></h3>
+                        <p class="text">{{result.style}}</p>
+                        <h5 class="title">Where</h5>
+                        <p class="text">{{result.city + ", " + result.country}}</p>
+                        <h5 class="title">When</h5>
+                        <p class="text">{{result.date_end}}</p>
+                        <a href="{{ url_for('event.show', id = result.id) }}" class="card-btm btn btn-primary py-1 px-2">
+                            More</a>
+                    </div>
+                    <div class="{{'card-footer ' ~ result.status.lower() | replace(' ', '_')}}">
+                        <small class="text-muted ">{{result.status}}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+<!-- main End -->
+
+{% endblock %}

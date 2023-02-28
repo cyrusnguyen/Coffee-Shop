@@ -1,0 +1,283 @@
+body {
+    font-family: Helvetica;
+}
+
+.h1-header,
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.dropdown-item,
+.navbar-dark .navbar-nav .nav-link {
+    color: rgb(255, 0, 0);
+}
+
+
+a {
+    text-decoration: none;
+    color: rgb(255, 0, 0);
+}
+
+.navbar-dark .navbar-toggler,
+.navbar-toggler-icon {
+    color: rgb(0, 255, 119);
+    border-color: rgba(249, 9, 9, 0);
+    filter: invert(100%);
+}
+
+
+.navbar-expand-sm .navbar-nav .nav-link {
+    padding-right: 1.5rem;
+    padding-left: 0.5rem;
+}
+
+
+.navbar-dark .navbar-nav .nav-link {
+
+    font-size: 1.5rem;
+}
+
+.h1-header {
+    font-size: 280%;
+}
+
+.h1-header {
+    text-transform: uppercase;
+}
+
+h1,
+h2 {
+    font-weight: bold;
+}
+
+
+.card {
+    height: 100%;
+    background-color: #ffffffd3;
+
+}
+
+
+
+
+.sold_out {
+    background-color: rgba(0, 162, 255, 0.3)
+}
+
+.upcoming {
+    background-color: rgba(0, 255, 38, 0.3)
+}
+
+.inactive {
+    background-color: rgba(255, 217, 0, 0.527)
+}
+
+.cancelled {
+    background-color: rgba(255, 0, 0, 0.3)
+}
+
+
+
+
+.btn {
+    transition: .5s;
+}
+
+.btn.btn-primary,
+.btn.btn-outline-primary:hover,
+.btn.btn-secondary,
+.btn.btn-outline-secondary:hover {
+    color: #ffffff;
+    background-color: #8d0404;
+
+}
+
+.btn.btn-primary:hover {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    background-color: rgb(123, 61, 161);
+}
+
+.btn.btn-secondary:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+
+
+
+
+
+
+/* Carousel */
+
+.carousel-caption {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(53, 1, 1, 0.603);
+    z-index: 1;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 15%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--dark);
+    border: 12px solid var(--dark);
+    border-radius: 2rem;
+}
+
+@media (max-width: 768px) {
+    #header-carousel .carousel-item {
+        position: relative;
+        min-height: 450px;
+    }
+
+    #header-carousel .carousel-item img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+
+
+
+.page-section {
+    margin-top: 5%;
+
+
+
+}
+
+
+.checked {
+    color: rgb(255, 22, 22);
+}
+
+
+
+
+
+.form-select,
+.example {
+    border: 1px solid #8b1e1e;
+}
+
+
+
+
+
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #8b1e1e;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+
+
+
+
+.container.form .form-text .h-100,
+.container.form .form-form .h-100 {
+    padding: 6rem 0;
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.footer-contact {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+
+
+
+.form-control,
+.form-check {
+
+    margin-bottom: 1rem;
+
+}
+
+
+form.example input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
+}
+
+form.example button {
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: #2196F3;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+}
+
+form.example button:hover {
+    background: #0b7dda;
+}
+
+form.example::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    pointer-events: auto;
+    background-color: rgba(255, 255, 255, 0.907);
+    background-clip: padding-box;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 1.0rem;
+    outline: 0;
+
+
+}
+
+.login-section {
+    margin-left: auto; 
+    margin-right: 0;
+}
