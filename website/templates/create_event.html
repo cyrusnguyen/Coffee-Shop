@@ -1,4 +1,4 @@
-{% extends 'GeneralBase.html' %}
+{% extends 'base.html' %}
 
 {% import "bootstrap/form.html" as wtf %}
 
@@ -15,11 +15,11 @@
                 <div class="col-lg-6 form-text" data-parallax="scroll">
                     <div class="d-flex align-content-center  h-100 px-4 px-sm-5 ps-lg-0 img-bg">
                         <img class="w-100" src="{{'../static/img/' + '4.jpg'}}" alt="Image">
-                        <h1 class="my-4">Create your Event</h1>
-                        <p class="text-light mb-5 ">Looking to create a dance event? Esentia Dancing is the perfect
+                        <h1 class="my-4">Create your Product</h1>
+                        <p class="text-light mb-5 ">Looking to create a dance product? Esentia Dancing is the perfect
                             place to start! You have the freedom to choose your time
                             and venue, alongside our user-friendly booking system, where we make it easy for you to
-                            create your dancing event to
+                            create your dancing product to
                             share with other users. Whether you're a local instructor or a multinational star, we
                             can help you find the patrons to
                             have your classes filled with maximum fun!</p>
@@ -31,7 +31,7 @@
 
 
                             <div class="row g-3">
-                                <h2 class=" text-center">Event Creation Form</h2>
+                                <h2 class=" text-center">Product Creation Form</h2>
 
                                 {{wtf.render_form(form)}}
 

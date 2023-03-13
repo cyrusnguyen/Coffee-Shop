@@ -1,4 +1,4 @@
-{% extends 'GeneralBase.html' %}
+{% extends 'base.html' %}
 
 {% import "bootstrap/form.html" as wtf %}
 
@@ -15,8 +15,8 @@
                 <div class="col-lg-6 form-text" data-parallax="scroll">
                     <div class="d-flex align-content-center  h-100 px-4 px-sm-5 ps-lg-0 img-bg">
                         <img class="w-100" src="{{'../static/img/' + '4.jpg'}}" alt="Image">
-                        <h1 class="my-4">Update your Event</h1>
-                        <p class="text-light mb-5 ">Made a mistake or want to change details? Update your event!</p>
+                        <h1 class="my-4">Update your Product</h1>
+                        <p class="text-light mb-5 ">Made a mistake or want to change details? Update your product!</p>
                     </div>
                 </div>
                 <div class="col-lg-6 form-form text-light" data-parallax="scroll">
@@ -25,7 +25,7 @@
 
 
                             <div class="row g-3">
-                                <h2 class=" text-center">Event Update Form</h2>
+                                <h2 class=" text-center">Product Update Form</h2>
 
                                 {{wtf.render_form(form)}}
 

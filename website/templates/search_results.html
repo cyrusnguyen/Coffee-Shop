@@ -1,4 +1,4 @@
-{% extends 'GeneralBase.html' %}
+{% extends 'base.html' %}
 
 {% block header %}
 {% endblock %}
@@ -12,15 +12,15 @@
             {% for result in search_results %}
             <div class="col-xl-2 col-lg-4 col-md-5 col-sm-6 col-xs-12">
                 <div class="card">
-                    <img src="{{ url_for('static', filename = 'img/' + result.image)}}" class="img-fluid">
+                    <img src="{{ url_for('static', filename = 'img/products/' + result.image)}}" class="img-fluid">
                     <div class="card-body">
-                        <h3 class="title"><a href="{{ url_for('event.show', id = result.id) }}">{{result.name}}</a></h3>
+                        <h3 class="title"><a href="{{ url_for('product.show', id = result.id) }}">{{result.name}}</a></h3>
                         <p class="text">{{result.style}}</p>
                         <h5 class="title">Where</h5>
                         <p class="text">{{result.city + ", " + result.country}}</p>
                         <h5 class="title">When</h5>
                         <p class="text">{{result.date_end}}</p>
-                        <a href="{{ url_for('event.show', id = result.id) }}" class="card-btm btn btn-primary py-1 px-2">
+                        <a href="{{ url_for('product.show', id = result.id) }}" class="card-btm btn btn-primary py-1 px-2">
                             More</a>
                     </div>
                     <div class="{{'card-footer ' ~ result.status.lower() | replace(' ', '_')}}">

@@ -1,0 +1,8 @@
+{
+    "Product_ID": 10,
+    "Name": "Espresso",
+    "Price": 8.5,
+    "Description": "Intense! An expertly crafted shot of espresso made from our Highlands Coffee Full City Roast Blend – a blend of premium Vietnamese Arabica and Robusta coffee beans.",
+    "Image": "espresso.png",
+    "Category_ID": 2
+}

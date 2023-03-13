@@ -1,0 +1,8 @@
+{
+    "Product_ID": 11,
+    "Name": "Americano",
+    "Price": 8.6,
+    "Description": "A shot of espresso topped with hot water. Also available was an Iced Americano.",
+    "Image": "americano.png",
+    "Category_ID": 2
+}

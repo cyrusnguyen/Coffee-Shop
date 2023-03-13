@@ -1,0 +1,8 @@
+{
+    "Product_ID": 12,
+    "Name": "Latte",
+    "Price": 9.0,
+    "Description": "Silky Smooth Milk Coffee! Lighter tasting than Cappuccino, our Latte starts with a shot of espresso, then we add a generous portion of fresh steamed milk and top it with a touch of hot milk foam. Also available as Iced Latte.",
+    "Image": "latte.png",
+    "Category_ID": 2
+}

@@ -1,4 +1,4 @@
-{% extends "Generalbase.html" %}
+{% extends "base.html" %}
 {% import "bootstrap/form.html" as wtf %}
 {% block header %}
 {% endblock %}
@@ -7,6 +7,7 @@
 <div class="container">
     <h1>Logged out</h1>
     <p>You have been successfully logged out.</p>
+    <a href="{{ url_for('main.index') }}">Back to Home Page</a>
 </div>
 
 {% endblock %}

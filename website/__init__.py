@@ -7,19 +7,17 @@ from flask import Blueprint, render_template
 
 db=SQLAlchemy()
 app=Flask(__name__)
-#create a function that creates a web application
-# a web server will run this web application
 def create_app():
   
     
     app.debug=True
-    app.secret_key='utroutoru'
+    app.secret_key='supersecretkey'
     # #set the app configuration data 
-    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///Event.db'
+    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///Product.db'
     # #initialize db with flask app
     db.init_app(app)
     with app.app_context():
-        from .models import Event, Comment, User
+        from .models import Product, Comment, User, Cart, Category
         db.create_all()
         db.session.commit()
 
@@ -43,8 +41,8 @@ def create_app():
     # a commonly used practice.
     from . import views
     app.register_blueprint(views.bp)
-    from . import Events
-    app.register_blueprint(Events.eventbp)
+    from . import Products
+    app.register_blueprint(Products.productbp)
     from . import auth
     app.register_blueprint(auth.bp)
    

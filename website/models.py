@@ -6,82 +6,103 @@ from datetime import datetime, time
 
 class User(db.Model, UserMixin):
     __tablename__='users'
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), index=True, nullable=False)
     emailid = db.Column(db.String(100), index=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)#should be 128 in length to store hash
     phone_number = db.Column(db.String(60), nullable=False)
     address = db.Column(db.String(255), nullable=False)
-    #image = db.Column(db.String(60), nullable=False, default='1.jpg')
+    image = db.Column(db.String(60), nullable=False, default='user.svg')
+    role = db.Column(db.String(60), nullable=False, default='user')
     
-    comments = db.relationship('Comment', backref='user')
-    events = db.relationship('Event', backref='user')
-    tickets = db.relationship('PurchasedTickets', backref='user')
+    comments = db.relationship('Comment', backref='users')
+    cart = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
     
     
+    def __init__(self, id, data):
+        self.id = id
+        self.data = data
 
     def __repr__(self):
         return "<Name: {}, id: {}>".format(self.name, self.id)
 
-class Event(db.Model):
-    __tablename__ = 'events'
+class Product(db.Model):
+    __tablename__ = 'products'
     def defaultValue(column_name):
         def default_function(context):
             return context.current_parameters.get(column_name)
         return default_function
-
-    id = db.Column(db.Integer, primary_key=True)
+    
+    product_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     description = db.Column(db.String(500), nullable=False)
-    image = db.Column(db.String(60), nullable=False, default='1.jpg') # this is going to be intresting
-    price = db.Column(db.Float, nullable=False) # might cahnge to currency
-    date_start = db.Column(db.Date, nullable=False)
-    date_end = db.Column(db.Date, nullable=False)
-    time_start =  db.Column(db.Time)
-    time_end =  db.Column(db.Time)
-    producer = db.Column(db.String(64), index=True)
-    status = db.Column(db.String(64), index=True)
-    style = db.Column(db.String(64), index=True)
-    address = db.Column(db.String(64), index=True)
-    city = db.Column(db.String(64), index=True)
-    country = db.Column(db.String(64), index=True)
-    ticketNo = db.Column(db.Integer, nullable=False)
-    ticketLeft = db.Column(db.Integer, default=defaultValue('ticketNo'))
+    image = db.Column(db.String(64), nullable=False, default='1.jpg')
+    price = db.Column(db.Float, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
+    status = db.Column(db.String(10), nullable=False) 
+
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'))
+    comment = db.relationship('Comment', backref='products')
+    user_id = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
     
 
+    def __repr__(self):
+        return "<Name: {}, id: {}>".format(self.name, self.id)
+    
+class CartProduct(db.Model):
+    __tablename__ = 'cartProducts'
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.relationship('Comment', backref='event')
-    tickets = db.relationship('PurchasedTickets', backref='event')
+    
+    cart_product_id = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.TIMESTAMP, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    category_id = db.Column(db.Integer, nullable=False)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
+    
 
     def __repr__(self):
         return "<Name: {}, id: {}>".format(self.name, self.id)
 
+class Category(db.Model):
+    __tablename__ = 'categories'
+    
+    category_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True)
+    description = db.Column(db.String(500), nullable=False)
+
+    products = db.relationship('Product', backref='categories')
+
+    def __repr__(self):
+        return "<Name: {}, id: {}>".format(self.name, self.id)
+    
 class Comment(db.Model):
     __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
+    comment_id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(400))
     created_at = db.Column(db.DateTime, default=datetime.now())
     #add the foreign keys
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
 
 
     def __repr__(self):
         return "<Comment: {}>".format(self.text)
 
-class PurchasedTickets(db.Model):
-    __tablename__ = 'purchasedTickets'
-    id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.Integer)
+class Cart(db.Model):
+    __tablename__ = 'carts'
+    cart_id = db.Column(db.Integer, primary_key=True)
+    total_amount = db.Column(db.Float)
 
     #add the foreign keys
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    products = db.relationship('Product', backref='carts')
 
 
     def __repr__(self):
-        return '{}, {}'.format(self.event_id, self.id)
+        return '{}, {}'.format(self.product_id, self.id)
 
 
 

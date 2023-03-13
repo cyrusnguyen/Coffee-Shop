@@ -1,4 +1,4 @@
-{% extends 'GeneralBase.html' %}
+{% extends 'base.html' %}
 
 {% import "bootstrap/form.html" as wtf %}
 
@@ -56,19 +56,19 @@
                                 </div>
                                 <!-- Modal body -->
                                 <div class="modal-body bg-light">
-                                    <h5 class=" text-center">Your tickets</h5>
+                                    <h5 class=" text-center">Your products</h5>
                                     <div class="row bg-light shadow p-2 mt-2">
-                                        {% for (event) in (user_tickets) %}
+                                        {% for (product) in (user_products) %}
 
                                         <div class="col-12 p-5 shadow-lg mt-2">
                                             <div class=" text-center">
-                                                <img src="{{ url_for('static', filename = 'img/' + event.image)}}" class="img-fluid">
+                                                <img src="{{ url_for('static', filename = 'img/' + product.image)}}" class="img-fluid">
                                                 <p>TicketID | {{shown_amount[loop.index]}}</p>
-                                                <p>Event Name | {{event.name}}</p>
-                                                <p>Times | {{event.time_start}} - {{event.time_end}}</p>
-                                                <p>Date | {{event.date_start}}</p>
-                                                <p>Location | {{event.city + ", " + event.country}}</p>
-                                                <p>Price | ${{event.price}}</p>
+                                                <p>Product Name | {{product.name}}</p>
+                                                <p>Times | {{product.time_start}} - {{product.time_end}}</p>
+                                                <p>Date | {{product.date_start}}</p>
+                                                <p>Location | {{product.city + ", " + product.country}}</p>
+                                                <p>Price | ${{product.price}}</p>
                                             </div>
                                         </div>
                                        
@@ -90,7 +90,7 @@
         <div class=" col-12 p-5">
             <div class="item_form">
                 <div class="text">
-                    <h2 class="my-4">Your Unpublished Events</h2>
+                    <h2 class="my-4">Your Unpublished Products</h2>
                 </div>
 
                 <div class="row text-light">
@@ -98,21 +98,21 @@
 
                     
                         
-                        {% for event in event %}
+                        {% for product in product %}
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <div class="card">
-                                <img src="{{ url_for('static', filename = 'img/' + event.image)}}" class="img-fluid">
+                                <img src="{{ url_for('static', filename = 'img/' + product.image)}}" class="img-fluid">
                                 <div class="card-body">
-                                    <h3 class="title"><a href="{{ url_for('event.show', id = event.id) }}">{{event.name}}</a></h3> 
-                                    <p class="text" style="color:black">{{event.style}}</p>
+                                    <h3 class="title"><a href="{{ url_for('product.show', id = product.id) }}">{{product.name}}</a></h3> 
+                                    <p class="text" style="color:black">{{product.style}}</p>
                                     <h5 class="title">Where</h5>
-                                    <p class="text" style="color:black">{{event.city + ", " + event.country}}</p>
+                                    <p class="text" style="color:black">{{product.city + ", " + product.country}}</p>
                                     <h5 class="title">When</h5>
-                                    <p class="text" style="color:black">{{event.date_end}}</p>
-                                    <a href="{{ url_for('event.show', id = event.id) }}" class="card-btm btn btn-primary py-1 px-2"> More</a>
+                                    <p class="text" style="color:black">{{product.date_end}}</p>
+                                    <a href="{{ url_for('product.show', id = product.id) }}" class="card-btm btn btn-primary py-1 px-2"> More</a>
                                 </div>
-                                <div class="{{'card-footer ' ~ event.status.lower() | replace(' ', '_')}}">
-                                    <small class="text-muted ">{{event.status}}</small>
+                                <div class="{{'card-footer ' ~ product.status.lower() | replace(' ', '_')}}">
+                                    <small class="text-muted ">{{product.status}}</small>
                                 </div>
                             </div>
                         </div>

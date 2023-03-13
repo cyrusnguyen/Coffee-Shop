@@ -72,4 +72,4 @@ def register():
 def logout():
     logout_user()
     #flash('Logged out successfully!', 'success')
-    return render_template('Logout.html')
+    return render_template('logout.html')

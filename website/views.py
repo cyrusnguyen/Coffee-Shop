@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, url_for, redirect, request
 from sqlalchemy.orm import load_only
 from flask_login import login_required, current_user
 from website.forms import ContactUsForm, BasicInfoForm, Updateform
-from .models import Event, User, PurchasedTickets
+from .models import Product, User, Cart
 from sqlalchemy import desc
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -16,9 +16,9 @@ bp = Blueprint('main', __name__)
 @bp.route('/')
 def index():
 
-    latest_events = Event.query.filter(Event.status !=  "Unpublished").limit(6).all()
-    latest_event = Event.query.filter(Event.status !=  "Unpublished").limit(1).all()
-    return render_template('index.html', latest_events = latest_events, latest_event = latest_event)
+    latest_products = Product.query.filter(Product.status ==  "Available").limit(6).all()
+    latest_product = Product.query.filter(Product.status ==  "Available").limit(1).all()
+    return render_template('home.html', latest_products = latest_products, latest_product = latest_product)
 
 
 
@@ -26,21 +26,21 @@ def index():
 def user_history():
     print('Method type: ', request.method)
     cu_form = ContactUsForm()
-    UserTickets = PurchasedTickets.query.filter_by(user = current_user).all()
-    event = Event.query.filter(Event.user_id == current_user.id and Event.status ==  "Unpublished")
-    ticketID = []
-    TicketsEvent = []     
-    ticketID.append(1)#Throwaway data 
+    UserTickets = Cart.query.filter_by(user = current_user).all()
+    product = Product.query.filter(Product.user_id == current_user.id and Product.status ==  "Unpublished")
+    productID = []
+    TicketsProduct = []     
+    productID.append(1)#Throwaway data 
     for x in range(len(UserTickets)):
-        ticketID.append(UserTickets[x].id)
-        TicketsEvent = TicketsEvent + Event.query.filter((Event.id ==UserTickets[x].event_id)).all()
+        productID.append(UserTickets[x].id)
+        TicketsProduct = TicketsProduct + Product.query.filter((Product.id ==UserTickets[x].product_id)).all()
     
     if cu_form.validate_on_submit():
 
         print('Successfully sent message', 'success')
         return redirect(url_for('main.user_history'))
 
-    return render_template('user_history.html', form=cu_form, user_tickets = TicketsEvent  , shown_amount = ticketID, event = event)
+    return render_template('user_history.html', form=cu_form, user_products = TicketsProduct  , shown_amount = productID, product = product)
 
 @bp.route('/update-user', methods=['GET', 'POST'])
 @login_required
@@ -80,7 +80,7 @@ def search():
     if request.args['search']:
         print(request.args['search'])
         dest = "%" + request.args['search'] + '%'
-        search_results = Event.query.filter((Event.description.like(dest))|(Event.name.like(dest))).order_by(desc(Event.name)).all()
+        search_results = Product.query.filter((Product.description.like(dest))|(Product.name.like(dest))).order_by(desc(Product.name)).all()
         return render_template('search_results.html', search_results=search_results)
     else:
         return redirect(url_for('main.index'))
@@ -91,7 +91,7 @@ def filterStyle():
     if request.args['filterStyle']:
         print(request.args['filterStyle'])
         dest = "%" + request.args['filterStyle'] + '%'
-        search_results = Event.query.filter(Event.style.like(dest))
+        search_results = Product.query.filter(Product.style.like(dest))
         return render_template('search_results.html', search_results=search_results)
     else:
         return redirect(url_for('main.index'))
@@ -102,13 +102,13 @@ def filterStatus():
     if request.args['filterStatus']:
         print(request.args['filterStatus'])
         dest = "%" + request.args['filterStatus'] + '%'
-        search_results = Event.query.filter(Event.status.like(dest))
+        search_results = Product.query.filter(Product.status.like(dest))
         return render_template('search_results.html', search_results=search_results)
     else:
         return redirect(url_for('main.index'))
 
-# for event view look at Events.py@mainbp.route('/search')
-@bp.route('/events')
+# for product view look at Products.py@mainbp.route('/search')
+@bp.route('/products')
 def show_all():
-    all_events = Event.query.filter(Event.status !=  "Unpublished").all()
-    return render_template('search_results.html', search_results=all_events)
+    all_products = Product.query.filter(Product.status ==  "Available").all()
+    return render_template('search_results.html', search_results=all_products)
