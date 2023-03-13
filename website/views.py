@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, url_for, redirect, request
 from sqlalchemy.orm import load_only
 from flask_login import login_required, current_user
 from website.forms import ContactUsForm, BasicInfoForm, Updateform
-from .models import Product, User, Cart
+from .models import Product, User, Cart, Category
 from sqlalchemy import desc
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,10 +15,12 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def index():
-
-    latest_products = Product.query.filter(Product.status ==  "Available").limit(6).all()
-    latest_product = Product.query.filter(Product.status ==  "Available").limit(1).all()
-    return render_template('home.html', latest_products = latest_products, latest_product = latest_product)
+    featured_products = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).limit(3).all()
+    print(featured_products)
+    latest_products = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).order_by(desc(Product.released_date)).limit(6).all()
+    latest_product = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).order_by(desc(Product.sold_quantity)).limit(1).all()
+    
+    return render_template('home.html', featured_products=featured_products, latest_products = latest_products, latest_product = latest_product)
 
 
 

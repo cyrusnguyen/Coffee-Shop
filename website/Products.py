@@ -18,10 +18,7 @@ productbp = Blueprint('product', __name__, url_prefix='/products')
 
 @productbp.route('/<id>', methods=['GET', 'POST'])
 def show(id):
-    global idstorage
-    idstorage = id
-    
-    SQLdetails = Product.query.filter_by(id=id).first()
+    SQLdetails = Product.query.filter_by(product_id=id).first()
     # if there is no user with that name
     if SQLdetails is None:
         return render_template("404.html")

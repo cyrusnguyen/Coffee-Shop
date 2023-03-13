@@ -23,8 +23,8 @@ class User(db.Model, UserMixin):
         self.id = id
         self.data = data
 
-    def __repr__(self):
-        return "<Name: {}, id: {}>".format(self.name, self.id)
+    # def __repr__(self):
+    #     return "<Name: {}, user_id: {}>".format(self.name, self.user_id)
 
 class Product(db.Model):
     __tablename__ = 'products'
@@ -40,14 +40,16 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=0)
     status = db.Column(db.String(10), nullable=False) 
+    sold_quantity = db.Column(db.Integer, nullable=False, default=0) 
+    released_date = db.Column(db.Date, nullable=False, default=datetime.today()) 
 
     category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'))
     comment = db.relationship('Comment', backref='products')
     user_id = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
     
 
-    def __repr__(self):
-        return "<Name: {}, id: {}>".format(self.name, self.id)
+    # def __repr__(self):
+    #     return "<Name: {}, product_id: {}>".format(self.name, self.product_id)
     
 class CartProduct(db.Model):
     __tablename__ = 'cartProducts'
@@ -55,7 +57,7 @@ class CartProduct(db.Model):
     
     cart_product_id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=0)
-    created_at = db.Column(db.TIMESTAMP, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
     user_id = db.Column(db.Integer, nullable=False)
     category_id = db.Column(db.Integer, nullable=False)
     
@@ -64,7 +66,7 @@ class CartProduct(db.Model):
     
 
     def __repr__(self):
-        return "<Name: {}, id: {}>".format(self.name, self.id)
+        return "<Name: {}, cart_product_id: {}>".format(self.name, self.cart_product_id)
 
 class Category(db.Model):
     __tablename__ = 'categories'
@@ -76,7 +78,7 @@ class Category(db.Model):
     products = db.relationship('Product', backref='categories')
 
     def __repr__(self):
-        return "<Name: {}, id: {}>".format(self.name, self.id)
+        return "<Name: {}, category_id: {}>".format(self.name, self.category_id)
     
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -102,7 +104,7 @@ class Cart(db.Model):
 
 
     def __repr__(self):
-        return '{}, {}'.format(self.product_id, self.id)
+        return '{}, of user {}'.format(self.cart_id, self.user_id)
 
 
 
