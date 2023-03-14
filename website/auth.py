@@ -49,15 +49,17 @@ def register():
         uname = registration_form.user_name.data
         pwd = registration_form.password.data
         email = registration_form.email_id.data
+        phone_number = registration_form.phone_number.data
+        address = registration_form.address.data
         #check if a user exists
         u1 = User.query.filter_by(name=uname).first()
         if u1:
             flash('User name already exists, please login')
             return redirect(url_for('auth.login'))
-        # don't store the password - crgenerate_password_hasheate password hash
+        #generate_password_hash
         pwd_hash = generate_password_hash(pwd)
         #create a new user model object
-        new_user = User(name=uname, password_hash=pwd_hash, emailid=email)
+        new_user = User(name=uname, password_hash=pwd_hash, email=email, phone_number=phone_number, address=address)
         db.session.add(new_user)
         db.session.commit()
         

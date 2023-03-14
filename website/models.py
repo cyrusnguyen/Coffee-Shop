@@ -7,8 +7,8 @@ from datetime import datetime, time
 class User(db.Model, UserMixin):
     __tablename__='users'
     user_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), index=True, nullable=False)
-    emailid = db.Column(db.String(100), index=True, nullable=False)
+    name = db.Column(db.String(100), unique=True, index=True, nullable=False)
+    email = db.Column(db.String(100), index=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)#should be 128 in length to store hash
     phone_number = db.Column(db.String(60), nullable=False)
     address = db.Column(db.String(255), nullable=False)
@@ -18,11 +18,9 @@ class User(db.Model, UserMixin):
     comments = db.relationship('Comment', backref='users')
     cart = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
     
-    
-    def __init__(self, id, data):
-        self.id = id
-        self.data = data
 
+    def get_id(self):
+        return (self.user_id)
     # def __repr__(self):
     #     return "<Name: {}, user_id: {}>".format(self.name, self.user_id)
 

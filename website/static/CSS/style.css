@@ -1,23 +1,23 @@
+@import url('https://fonts.cdnfonts.com/css/maximum-impact');
 body {
-    font-family: Helvetica;
+    font:400 'Open Sans', Helvetica;
 }
-
-.h1-header,
-
 h1,
+h5
 h2,
 h3,
 h4,
-h5,
+.h1-header,
 .dropdown-item,
 .navbar-dark .navbar-nav .nav-link {
-    color: rgb(255, 0, 0);
+    font-family: 'Impact', sans-serif;
+    color: rgb(210, 23, 23);
 }
 
 
 a {
     text-decoration: none;
-    color: rgb(255, 0, 0);
+    color: rgb(180, 0, 0);
 }
 
 .navbar-dark .navbar-toggler,
