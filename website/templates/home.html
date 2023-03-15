@@ -86,7 +86,7 @@
                             <a href="{{ url_for('product.show', id = product[0].product_id) }}" class="card-btm btn btn-primary py-1 px-2"> More</a>
                         </div>
                         <div class="{{'card-footer ' ~ product[0].status.lower() | replace(' ', '_')}}">
-                            <small class="text-muted ">{{product[0].status}}</small>
+                            <small class="text-muted ">{{ product[0].status }}</small>
                         </div>
                     </div>
                 </div>

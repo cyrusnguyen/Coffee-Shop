@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+{% block header %}
+{% endblock %}
+{% block content %}
+
+<head>
+	<title>Contact Us</title>
+	<style>
+		form {
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px #d9d9d9;
+			width: 50%;
+			margin: auto;
+			margin-top: 50px;
+		}
+		input[type=text], textarea {
+			width: 100%;
+			padding: 12px 20px;
+			margin: 8px 0;
+			box-sizing: border-box;
+			border: none;
+			border-radius: 4px;
+		}
+		
+		label {
+			font-weight: bold;	
+		}
+		@media only screen and (max-width: 600px) {
+			form {
+				width: 80%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<form class='page-section bg-dark text-dark p-5 shadow-lg' action="submit-form.php" method="post">
+		<h1 class="text-center">Contact Us</h1>
+		<label class="text-light" for="name">Name:</label>
+		<input type="text" id="name" name="name" placeholder="Your name..." required>
+		<label class="text-light"for="email">Email:</label>
+		<input type="text" id="email" name="email" placeholder="Your email..." required>
+		<label class="text-light" for="message">Message:</label>
+		<textarea id="message" name="message" placeholder="Your message..." required></textarea>
+		<input class="btn btn-primary text-center" type="submit" value="Send">
+	</form>
+</body>
+
+{% endblock %}

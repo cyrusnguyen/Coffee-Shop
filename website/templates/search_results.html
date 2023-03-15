@@ -9,28 +9,55 @@
 
         <!-- Cards -->
         <div class="row mx-auto g-3">
-            {% for result in search_results %}
-            <div class="col-xl-2 col-lg-4 col-md-5 col-sm-6 col-xs-12">
+            <h1 class="text-center">PRODUCTS ({{ total_products }} )</h1>
+            {% for result in search_results.items %}
+            <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6 col-xs-12">
                 <div class="card">
-                    <img src="{{ url_for('static', filename = 'img/products/' + result.image)}}" class="img-fluid">
+                    <img src="{{ url_for('static', filename = 'img/products/' + result[0].image)}}" class="img-fluid">
                     <div class="card-body">
-                        <h3 class="title"><a href="{{ url_for('product.show', id = result.id) }}">{{result.name}}</a></h3>
-                        <p class="text">{{result.style}}</p>
-                        <h5 class="title">Where</h5>
-                        <p class="text">{{result.city + ", " + result.country}}</p>
-                        <h5 class="title">When</h5>
-                        <p class="text">{{result.date_end}}</p>
-                        <a href="{{ url_for('product.show', id = result.id) }}" class="card-btm btn btn-primary py-1 px-2">
+                        <h3 class="title"><a href="{{ url_for('product.show', id = result[0].product_id) }}">{{result[0].name}}</a></h3>
+                        <p class="text">{{result.category_name}}</p>
+                    
+                        <a href="{{ url_for('product.show', id = result.product_id) }}" class="card-btm btn btn-primary py-1 px-2">
                             More</a>
                     </div>
-                    <div class="{{'card-footer ' ~ result.status.lower() | replace(' ', '_')}}">
-                        <small class="text-muted ">{{result.status}}</small>
+                    <div class="{{'card-footer ' ~ result[0].status.lower() | replace(' ', '_')}}">
+                        <small class="text-muted ">{{result[0].status}}</small>
                     </div>
                 </div>
             </div>
             {% endfor %}
+            <ul class="pagination">
+                {% if search_results.has_prev %}
+                    <li class="page-item"><a class="page-link" href="{{ url_for('main.show_all', page_num=search_results.prev_num) }}"><<</a></li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link"><<</span>
+                {% endif %}
+                    </li>
+                  
+                {% for page in search_results.iter_pages(left_edge=2, right_edge=2) %}
+                
+                    {% if page %}
+                        {% if page != search_results.page %}
+                            <li class="page-item"><a class="page-link" href="{{ url_for('main.show_all', page_num=page) }}">{{ page }}</a></li>
+                        {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="{{ url_for('main.show_all', page_num=page) }}">{{ page }}</a></li>
+                        {% endif %}
+                    {% else %}
+                            <li class="page-item disabled"><a href="#" class="page-link">…</a></li> 
+                    {% endif %}
 
+                {% endfor %}
+                
+                {% if search_results.has_next %}
+                 <li class="page-item"><a class="page-link" href="{{ url_for('main.show_all', page_num=search_results.next_num) }}">>></a></li>
+                {% else %}
+                 <li class="page-item disabled"><span class="page-link">>></span>
+                {% endif %}
+            </ul>
         </div>
+        
+            
     </div>
 </section>
 <!-- main End -->

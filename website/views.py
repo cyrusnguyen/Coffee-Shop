@@ -110,7 +110,14 @@ def filterStatus():
         return redirect(url_for('main.index'))
 
 # for product view look at Products.py@mainbp.route('/search')
-@bp.route('/products')
-def show_all():
-    all_products = Product.query.filter(Product.status ==  "Available").all()
-    return render_template('search_results.html', search_results=all_products)
+@bp.route('/products/page=<int:page_num>')
+@bp.route('/products/')
+def show_all(page_num=1):
+    all_products_query = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).filter(Product.status ==  "Available")
+    total_products = len(all_products_query.all())
+    all_products = all_products_query.paginate(per_page=12, page=page_num)
+    return render_template('search_results.html', search_results=all_products, total_products=total_products)
+
+@bp.route('/contact-us')
+def contact_us():
+    return render_template('contact_us.html')
