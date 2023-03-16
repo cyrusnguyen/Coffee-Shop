@@ -66,10 +66,10 @@
                     
 
                     {%  if user.role|lower == "admin" %}
-                    <a href="{{ url_for('product.update_product') }}" class="card-btm btn btn-primary py-1 px-2"
+                    <a href="{{ url_for('product.update_product', id=product.product_id) }}" class="card-btm btn btn-primary py-1 px-2"
                     >Update Product</a>
                     <br>
-                    <a href="{{ url_for('product.delete_product') }}" class="card-btm btn btn-primary py-1 px-2"
+                    <a href="{{ url_for('product.delete_product', id=product.product_id) }}" class="card-btm btn btn-primary py-1 px-2"
                     >Delete Product</a>
                     {% else %}
                     {% endif %}
@@ -92,7 +92,7 @@
                                     <!-- <form action="/action_page.php"> -->
                                         <div class="px-5 my-3">
                                             <p>Remaining Products: {{product.quantity}}</p>
-                                            <!-- {{wtf.render_form(TicketFrom)}} -->
+                                            {{wtf.render_form(productForm)}}
                                             
                                         </div>
                                 </div>
@@ -166,14 +166,14 @@
                                 <h3>Write your comment</h3>
                             </div>
 
-                            {{wtf.render_form(form,"/products/{0}/comment".format(product.id))}} 
+                            {{wtf.render_form(form,"/product/{0}/comment".format(product.product_id))}} 
 
-                            {% for comment in product.comments %}
+                            {% for comment in product.comment %}
                             <div class="d-flex flex-row mt-5 ">
                                 <div class="w-100 p-4 shadow-lg">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex flex-row align-items-center">
-                                            <h5 class="h-comment">{{comment.user.name}}</h5>
+                                            <h5 class="h-comment">{{comment.users.name}}</h5>
                                         </div> <small>{{comment.created_at.strftime('%d-%m-%Y %H:%M:%S')}}</small>
                                     </div>
                                     <p class="text-justify comment-text mb-0">{{comment.text}}</p>
@@ -184,11 +184,11 @@
                     </div>
                 </div>
             </div>
+
+
+        </section>
+
     </div>
-
-</section>
-
-</div>
 </section>
 <!--end main-->
 

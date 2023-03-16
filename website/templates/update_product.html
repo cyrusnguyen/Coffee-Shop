@@ -2,19 +2,19 @@
 
 {% import "bootstrap/form.html" as wtf %}
 
+
 {% block header %}
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <section class="page-section bg-dark text-light shadow-lg">
 
-    <!-- form Start -->
     <div class="container-fluid overflow-hidden bg-dark px-lg-0">
         <div class="container form px-lg-0">
             <div class="row g-0 mx-lg-0">
                 <div class="col-lg-6 form-text" data-parallax="scroll">
                     <div class="d-flex align-content-center  h-100 px-4 px-sm-5 ps-lg-0 img-bg">
-                        <img class="w-100" src="{{'../static/img/' + '4.jpg'}}" alt="Image">
+                        <img class="w-70" src="../static/img/products/{{product.image}}" alt="Image">
                         <h1 class="my-4">Update your Product</h1>
                         <p class="text-light mb-5 ">Made a mistake or want to change details? Update your product!</p>
                     </div>
@@ -35,7 +35,8 @@
                 </div>
             </div>
         </div>
-        <!-- form End -->
+    </div>
+
 
 
 </section>

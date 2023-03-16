@@ -13,23 +13,23 @@ from werkzeug.utils import secure_filename
 # Use of blue print to group routes,
 # name - first argument is the blue print name
 # import name - second argument - helps identify the root url for it
-productbp = Blueprint('product', __name__, url_prefix='/products')
+productbp = Blueprint('product', __name__)
 
 
-@productbp.route('/<id>', methods=['GET', 'POST'])
+@productbp.route('/product/<id>', methods=['GET', 'POST'])
 def show(id):
     SQLdetails = Product.query.filter_by(product_id=id).first()
     # if there is no user with that name
     if SQLdetails is None:
         return render_template("404.html")
-    user_information = 0
+    user_information = None
     if current_user.is_authenticated:
         if SQLdetails.status == "Unpublished":
-            if current_user.id != SQLdetails.user_id :
+            if current_user.user_id != SQLdetails.user_id :
                 return render_template("404.html")
                 
             
-        user_information = User.query.filter_by(id=current_user.id).first()
+        user_information = User.query.filter_by(user_id=current_user.user_id).first()
 
 
     comm_form = CommentForm()
@@ -49,7 +49,7 @@ def show(id):
 
     
     
-    return render_template('view.html', product=SQLdetails, user = user_information, form=comm_form, TicketFrom = productForm)
+    return render_template('view.html', product=SQLdetails, user = user_information, form=comm_form, productForm = productForm)
 
 
 @productbp.route('/create-product', methods=['GET', 'POST'])
@@ -84,7 +84,7 @@ def create_product():
         print('Successfully sent message', 'success')
         
 
-        return redirect(url_for('main.show_all', id = '1'))
+        return redirect(url_for('main.show_all'))
     return render_template('create_product.html', form=bi_form)
 
 def check_upload_file(form):
@@ -111,17 +111,17 @@ def check_upload_file(form):
 
 
 
-@productbp.route('/update-product', methods=['GET', 'POST'])
+@productbp.route('/update-product/<id>', methods=['GET', 'POST'])
 @login_required
-def update_product():
+def update_product(id):
 
-    SQLdetails = Product.query.filter_by(id=idstorage).first()
-    user_information = User.query.filter_by(id=current_user.id).first()
+    SQLdetails = Product.query.filter_by(product_id=id).first()
+    user_information = User.query.filter_by(user_id=current_user.user_id).first()
 
-    if SQLdetails.user_id == current_user.id:
+    if current_user.role.lower() == "admin":
 
 
-        print('Method type: ', request.method)
+        # print('Method type: ', request.method)
         bi_form = BasicInfoForm()
         
         if bi_form.validate_on_submit():
@@ -129,35 +129,37 @@ def update_product():
             
             
             print(bi_form.category.data)
-            update = Product.query.filter_by(id = idstorage).update(dict(name = bi_form.product_name.data,
+            update = Product.query.filter_by(product_id = id).update(dict(
+            name = bi_form.product_name.data,
             description = bi_form.description.data,
             image = upload_file,
             price = bi_form.price.data,
             status = bi_form.status.data,
             # category_id = bi_form.category.data,
-            quantity = bi_form.number_of_products.data))
+            quantity = bi_form.number_of_products.data
+            ))
 
             db.session.commit()
             print('Successfully sent message', 'success')
             
 
-            return redirect(url_for('main.show_all', id = '1'))
-        return render_template('update_product.html', form=bi_form, product = SQLdetails,user = user_information)
+            return redirect(url_for('main.show_all'))
+        return render_template('update_product.html', form=bi_form, product = SQLdetails, user = user_information)
         
     else:
-           return render_template("404.html")
+        return render_template("404.html")
 
 
-@productbp.route('/delete-product', methods=['GET', 'POST'])
+@productbp.route('/delete-product/<id>', methods=['GET', 'POST'])
 @login_required
-def delete_product():
+def delete_product(id):
 
        
 
-    SQLdetails = Product.query.filter_by(id=idstorage).first()
-    user_information = User.query.filter_by(id=current_user.id).first()
+    SQLdetails = Product.query.filter_by(product_id=id).first()
+    user_information = User.query.filter_by(user_id=current_user.user_id).first()
 
-    if SQLdetails.user_id == current_user.id:
+    if current_user.role.lower() == "admin":
 
 
         print('Method type: ', request.method)
@@ -168,7 +170,7 @@ def delete_product():
             
             
 
-            Product.query.filter_by(id = idstorage).delete()
+            Product.query.filter_by(product_id = id).delete()
             db.session.commit()
             print('Successfully sent message', 'success')
             
@@ -189,18 +191,18 @@ def delete_product():
 
            
 
-@productbp.route('/<id>/comment', methods=['GET', 'POST'])
+@productbp.route('/product/<id>/comment', methods=['GET', 'POST'])
 @login_required
 def comment(id):
     comm_form = CommentForm()
-    product_obj = Product.query.filter_by(id=id).first()  
+    product_obj = Product.query.filter_by(product_id=id).first()  
     if comm_form.validate_on_submit():
         #read the comment from the form
-        comment = Comment(text=comm_form.text.data,  
-                        product=product_obj,
-                        user=current_user) 
-        #here the back-referencing works - comment.destination is set
-        # and the link is created
+        comment = Comment(
+            text=comm_form.text.data,  
+            products=product_obj,
+            users=current_user) 
+
         db.session.add(comment) 
         db.session.commit() 
         print('Successfully sent message', 'success')

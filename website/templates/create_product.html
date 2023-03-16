@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<section class="page-section bg-dark text-light shadow-lg">
+
+    <!-- form Start -->
+    <div class="container-fluid overflow-hidden bg-dark px-lg-0">
+        <div class="container form px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-6 form-text" data-parallax="scroll">
+                    <div class="d-flex align-content-center  h-100 px-4 px-sm-5 ps-lg-0 img-bg">
+                        <img class="w-70" src="{{'../static/img/' + 'coffee-shop.png'}}" alt="Image">
+                        <h1 class="my-4">Create your Product</h1>
+                        <p class="text-light mb-5 ">Welcome to our online coffee shop, where we are passionate about serving you the best coffee experience from the comfort of your home. We know that coffee is more than just a drink; it’s a ritual, a way of life, and it deserves to be savored in its purest form. That’s why we have carefully curated our selection of coffee beans from some of the best roasters across the world, ensuring that every sip you take transports you to a different place and time.
+                            <br>
+                            Our product offerings go beyond just coffee beans and blends. We also have a wide range of brewing equipment, such as French presses, pour-over drippers, and espresso machines, to help you prepare your perfect cup of coffee. In addition, we offer premium quality tea blends, hot chocolate mixes, and coffee accessories, such as mugs and tumblers, to complement your coffee experience and make it even more luxurious.
+                            <br>
+                            We are committed to delivering the highest quality products and exceptional customer service, so explore our online store and find your next favorite coffee or brewing device.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 form-form text-light" data-parallax="scroll">
+                    <div class="h-100 px-4 px-sm-5 pe-lg-0">
+                        <div class="bg-dark p-4 p-sm-5">
+
+
+                            <div class="row g-3">
+                                <h2 class=" text-center">Product Creation Form</h2>
+
+                                {{wtf.render_form(form)}}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- form End -->
+
+
+</section>
+
+{% endblock %}

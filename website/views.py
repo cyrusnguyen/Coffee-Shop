@@ -112,7 +112,6 @@ def filterStatus():
     else:
         return redirect(url_for('main.index'))
 
-# for product view look at Products.py@mainbp.route('/search')
 @bp.route('/products/page=<int:page_num>')
 @bp.route('/products/')
 def show_all(page_num=1):

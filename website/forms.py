@@ -50,9 +50,6 @@ class ContactUsForm(FlaskForm):
 
 # Product Creation Form
 class BasicInfoForm(FlaskForm):
-    def get_all_categories():
-        result = list()
-        return result
     
     product_name = StringField("Product Name", validators=[InputRequired()])
     
@@ -63,11 +60,6 @@ class BasicInfoForm(FlaskForm):
     # category = RadioField("Category", choices=[(categories.category_id, categories.name) for categories in Category.query.all()], validators=[InputRequired()])
     status = RadioField("Status", choices=['Available','Sold Out'], validators=[InputRequired()])
     description = TextAreaField('Description', validators=[InputRequired()])
-    address = StringField("Address", validators=[InputRequired()])
-    city = StringField("City", validators=[InputRequired()])
-    country = StringField("Country", validators=[InputRequired()])
-    zipcode = StringField("ZipCode", validators=[InputRequired()])
-    created_at = TimeField("Start Time", validators=[InputRequired()])
     submit = SubmitField("Create")
 
 # Product Update Form
