@@ -179,8 +179,17 @@ div.form-field-contact-input {
         object-fit: cover;
     }
 }
-
-
+.bi-cart-fill:after{
+    content:attr(value);
+    font-size:12px;
+    background: white;
+    border-radius:50%;
+    padding:3px;
+    position:relative;
+    left:-8px;
+    top:-10px;
+    opacity:0.9;
+    }
 
 
 .page-section {

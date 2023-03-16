@@ -10,7 +10,7 @@
 <head>
 	<title>Contact Us</title>
 	<style>
-		form {
+		form .page-section{
 			padding: 20px;
 			border-radius: 10px;
 			box-shadow: 0 0 10px #d9d9d9;
@@ -18,7 +18,7 @@
 			margin: auto;
 			margin-top: 50px;
 		}
-		input[type=text], textarea {
+		.page-section input[type=text], .page-section textarea {
 			width: 100%;
 			padding: 12px 20px;
 			margin: 8px 0;
@@ -54,6 +54,13 @@
 		{{ form.submit(class="btn btn-primary text-center") }}
 	</form>
 	
-	
+	<div class="page-section bg-dark text-dark p-5 shadow-lg text-center">
+		<h1 class="text-center">Where to find us?</h1>
+		<iframe class="img-fluid"
+		src="https://www.google.com/maps/embed/v1/place?key=AIzaSyADqWzreZxiYu7PKLxafDECv0ZH793mdbM
+		&q=Brisbane"
+			width="700" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+			referrerpolicy="no-referrer-when-downgrade"></iframe>
+	</div>
 </body>
 {% endblock %}
