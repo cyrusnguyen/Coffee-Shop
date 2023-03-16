@@ -23,15 +23,16 @@
 
         <!--Row 2-->
         <div class="row g-0 bg-dark ">
-            <div class="d-flex col-xl-8 col-lg-12"><img class="img-fluid"
+            <div class="d-flex col-xl-5 col-lg-12"><img class="img-fluid"
                     src="../static/img/products/{{product.image}}" alt="">
             </div>
-            <div class="d-flex col-lg-4 px-5 p-5">
+            <div class="d-flex col-lg-7 px-5 p-5">
                 <div class="m-lg-auto m-sm-0">
                     <h2 class="date mb-3">{{product.date}}</h2>
                     <P class="mb-1">Price | ${{product.price}}</P>
                     <P class="mb-1">Status | {{product.status}}</P>
                     <P class="mb-1">Released Date | {{product.released_date}}</P>
+                    <P class="mb-1">In stock | {{product.quantity}} products</P>
               
                     {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -42,7 +43,7 @@
                     {% endwith %}
                     
                     {%if current_user.is_authenticated %}
-                        {% if product.status == "Cancelled" or product.status == "Sold Out"%}
+                        {% if product.status != "Available"%}
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product" disabled>
                             Get Product
                         </button>
@@ -57,24 +58,20 @@
                                 Get Product
                             </button>
                         {% else %}
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Loginrequired" >
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Loginrequired">
                                 Get Product
                             </button>
                         {% endif %}
                     {% endif %}
+                    
 
-                    {%  if product.user_id == user.id %}
+                    {%  if user.role|lower == "admin" %}
                     <a href="{{ url_for('product.update_product') }}" class="card-btm btn btn-primary py-1 px-2"
                     >Update Product</a>
-                    {% else %}
-
-                    {% endif %}
-                    
-                    {%  if product.user_id == user.id %}
+                    <br>
                     <a href="{{ url_for('product.delete_product') }}" class="card-btm btn btn-primary py-1 px-2"
                     >Delete Product</a>
                     {% else %}
-
                     {% endif %}
 
                     <!-- The Modal -->
@@ -94,32 +91,31 @@
                                 <div class="container mt-3">
                                     <!-- <form action="/action_page.php"> -->
                                         <div class="px-5 my-3">
-                                            <p>Remaining Products: {{product.productLeft}}</p>
-                                            {{wtf.render_form(TicketFrom)}}
+                                            <p>Remaining Products: {{product.quantity}}</p>
+                                            <!-- {{wtf.render_form(TicketFrom)}} -->
                                             
                                         </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal text-dark" id="Loginrequired">
-                        <div class="modal-dialog modal-dialog-scrollable">
-                            <div class="modal-content">
-                                <div class="modal-header mx-auto">
-                                    <h3></h3>
-                                </div>
-                                <div class></div>
-                                <div class="modal-text mx-auto">
-                                    <h5>Login is required to purchase products
-                                        <br>
-                                        <br>
-                                        Please Login or Register an account
-                                    </h5>
-                                </div>
-                                    <div class="px-5 my-3">
-                                    </div>
-                                </div>
+                    <!-- Modal -->
+                    <div class="modal text-dark" id="Loginrequired" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">LOGIN REQUIRED!</h5>
+                            
                             </div>
+                            <div class="modal-body">
+                            <p>Please Login to purchase this product.</p>
+                            <p>Don't have an account. <a href="{{ url_for('auth.register')}}">Sign up</a></p>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" onclick="window.location.href='{{ url_for( 'auth.login') }}';" class="btn btn-primary">LOG IN >></button>
+                            </div>
+                        </div>
                         </div>
                     </div>
 
@@ -131,21 +127,22 @@
 
 
             </div>
-            <div class="d-flex col-xl-4 col-lg-4 p-5">
-                <div class="item_text">
-                    <h2 class="date mb-3">What to expect</h2>
+            
+            
+            
+        </div>
+
+
+
+        <section class="row g-0 bg">
+            <div class="d-flex col-xl-12 p-5 justify-content-center">
+                <div class="item_text text-center">
+                    <h2>About this product</h2>
                     <p class="#">{{product.description}}</p>
                 </div>
             </div>
-            <div class="d-flex col-xl-4 col-lg-4 py-5">
-                <!--this will also have to change-->
-                <iframe class="img-fluid"
-                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyADqWzreZxiYu7PKLxafDECv0ZH793mdbM
-                &q={{product.address}}"
-                    width="700" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-        </div>
+        </section>
+        
 
 
 

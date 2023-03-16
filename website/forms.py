@@ -40,12 +40,12 @@ class RegisterForm(FlaskForm):
 
 # Contact us Form
 class ContactUsForm(FlaskForm):
-    user_name = StringField("User Name", validators=[InputRequired()])
-    email_id = StringField("Email Address", validators=[
-                           Email("Please enter a valid email")])
-    subject = StringField('Subject', validators=[InputRequired()])
-    message = TextAreaField('Message', validators=[InputRequired()])
-    submit = SubmitField("Create")
+    user_name = StringField("Name", validators=[InputRequired()], render_kw={"style": "font-weight: bold; color: white;"})
+    email = StringField("Email Address", validators=[
+                           Email("Please enter a valid email")], render_kw={"style": "font-weight: bold; color: white;"})
+    subject = StringField('Subject', validators=[InputRequired()], render_kw={"style": "font-weight: bold; color: white;"})
+    message = TextAreaField('Message', validators=[InputRequired()], render_kw={"style": "font-weight: bold; color: white;"})
+    submit = SubmitField("Send")
 
 
 # Product Creation Form
@@ -95,12 +95,12 @@ class UpdateInfoForm(FlaskForm):
     submit = SubmitField("Update")
 
 
-    # Product Delete Form####
+# Product Delete Form
 class DeleteInfoForm(FlaskForm):
     submit = SubmitField("Delete")
     
 
-# comment Form
+# Comment Form
 class CommentForm(FlaskForm):
     text = TextAreaField('Comment', [InputRequired()])
     submit = SubmitField('Create')
@@ -111,7 +111,7 @@ class PurchaseTicketForm(FlaskForm):
     submit = SubmitField("Purchase")
     
 
-# this is the registration form
+# Update form
 class Updateform(FlaskForm):
     user_name = StringField("User Name", validators=[InputRequired()])
     email_id = StringField("Email Address", validators=[

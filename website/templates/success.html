@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+<!-- {% import "bootstrap/form.html" as wtf %} -->
+
+{% block content %}
+
+<div class="container">
+    <h1>Successfully Sent!</h1>
+    <p>We have received your request. We will contact your as soon as possible. Thank you</p>
+    <p>Click <a href="{{url_for('main.index')}}">Here</a> to go back to Home Page </p>
+</div>
+
+{% endblock %}

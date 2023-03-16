@@ -4,6 +4,7 @@
 
 {% block header %}
 {% endblock %}
+
 {% block content %}
 
 <head>
@@ -35,18 +36,24 @@
 			}
 		}
 	</style>
+	
 </head>
 <body>
-	<form class='page-section bg-dark text-dark p-5 shadow-lg' action="submit-form.php" method="post">
-		<h1 class="text-center">Contact Us</h1>
-		<label class="text-light" for="name">Name:</label>
-		<input type="text" id="name" name="name" placeholder="Your name..." required>
-		<label class="text-light"for="email">Email:</label>
-		<input type="text" id="email" name="email" placeholder="Your email..." required>
-		<label class="text-light" for="message">Message:</label>
-		<textarea id="message" name="message" placeholder="Your message..." required></textarea>
-		<input class="btn btn-primary text-center" type="submit" value="Send">
+	<form class='page-section bg-dark text-dark p-5 shadow-lg' action="{{ url_for('main.contact_us') }}" method="POST">
+		<h1 class="text-center">Contact us</h1>
+		
+		{{ form.hidden_tag() }}
+		{{ form.user_name.label(class='text-light') }}
+		{{ form.user_name(class='text-dark') }}
+		{{ form.email.label(class='text-light') }}
+		{{ form.email(class='text-dark') }}
+		{{ form.subject.label(class='text-light') }}
+		{{ form.subject(class='text-dark') }}
+		{{ form.message.label(class='text-light') }}
+		{{ form.message(class='text-dark') }}
+		{{ form.submit(class="btn btn-primary text-center") }}
 	</form>
+	
+	
 </body>
-
 {% endblock %}

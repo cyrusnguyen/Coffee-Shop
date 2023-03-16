@@ -143,18 +143,14 @@ h2 {
 }
 
 
-/* .carousel-caption {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background: rgba(53, 1, 1, 0.603);
-    z-index: 1;
-} */
+div.form-label-contact-input {
+    color: white;
+}
+  
+div.form-field-contact-input {
+    color: black !important;
+    font-size: 40px;
+}
 
 .carousel-control-prev,
 .carousel-control-next {

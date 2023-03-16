@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, url_for, redirect, request
 from sqlalchemy.orm import load_only
 from flask_login import login_required, current_user
 from website.forms import ContactUsForm, BasicInfoForm, Updateform
-from .models import Product, User, Cart, Category
+from .models import Product, User, Cart, Category, ContactUs
 from sqlalchemy import desc
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -21,6 +21,10 @@ def index():
     latest_product = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).order_by(desc(Product.sold_quantity)).limit(1).all()
     
     return render_template('home.html', featured_products=featured_products, latest_products = latest_products, latest_product = latest_product)
+
+@bp.route('/success')
+def success():
+    return render_template('success.html')
 
 
 
@@ -50,7 +54,6 @@ def update_user():
     registration_form = Updateform()
     
     if (registration_form.validate_on_submit() == True):
-        #get username, password and email from the form
         uname = registration_form.user_name.data
         pwd = registration_form.password.data
         email = registration_form.email_id.data
@@ -62,7 +65,7 @@ def update_user():
         
 
         
-        # don't store the password - crgenerate_password_hasheate password hash
+        # Generate password hash - Not the raw password
         pwd_hash = generate_password_hash(pwd)
         
 
@@ -71,9 +74,9 @@ def update_user():
 
         db.session.commit()
         
-        #commit to the database and redirect to HTML page
+        # Commit to the database and redirect to HTML page
         return redirect(url_for('main.user_history'))
-    #the else is called when there is a get message
+    # Else is called when there is a get message
     else:
         return render_template('user.html', form=registration_form, heading='Update Profile')
 # General search
@@ -118,6 +121,22 @@ def show_all(page_num=1):
     all_products = all_products_query.paginate(per_page=12, page=page_num)
     return render_template('search_results.html', search_results=all_products, total_products=total_products)
 
-@bp.route('/contact-us')
+@bp.route('/contact-us', methods=['GET', 'POST'])
 def contact_us():
-    return render_template('contact_us.html')
+    contact_us_form = ContactUsForm()
+    if (contact_us_form.validate_on_submit()):
+        #get username, password and email from the form
+        uname = contact_us_form.user_name.data
+        email = contact_us_form.email.data
+        subject = contact_us_form.subject.data
+        message = contact_us_form.message.data
+        contact_us = ContactUs(user_name=uname, email=email, subject=subject, message=message)
+        db.session.add(contact_us)
+
+        db.session.commit()
+        
+        #commit to the database and redirect to HTML page
+        return redirect(url_for('main.success'))
+
+    else:
+        return render_template('contact_us.html', form=contact_us_form)

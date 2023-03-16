@@ -91,6 +91,18 @@ class Comment(db.Model):
     def __repr__(self):
         return "<Comment: {}>".format(self.text)
 
+class ContactUs(db.Model):
+    __tablename__ = 'contactus'
+    contact_us_id = db.Column(db.Integer, primary_key=True)
+    user_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    subject = db.Column(db.String(50))
+    message = db.Column(db.String(500), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now())
+
+    def __repr__(self):
+        return "<Comment: {}>".format(self.text)
+    
 class Cart(db.Model):
     __tablename__ = 'carts'
     cart_id = db.Column(db.Integer, primary_key=True)
