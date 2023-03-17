@@ -41,8 +41,8 @@ def create_app():
     # a commonly used practice.
     from . import views
     app.register_blueprint(views.bp)
-    from . import Products
-    app.register_blueprint(Products.productbp)
+    from . import products
+    app.register_blueprint(products.productbp)
     from . import auth
     app.register_blueprint(auth.bp)
    

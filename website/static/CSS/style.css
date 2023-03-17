@@ -204,7 +204,13 @@ div.form-field-contact-input {
     color: rgb(255, 22, 22);
 }
 
+.AClass{
+    right:0px;
 
+    border: none;
+    background: none;
+    position: absolute;
+}
 
 
 

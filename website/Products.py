@@ -207,3 +207,19 @@ def comment(id):
         db.session.commit() 
         print('Successfully sent message', 'success')
     return redirect(url_for('product.show', id=id))
+
+@productbp.route('/<id>/delete-comment', methods=['GET', 'POST'])
+@login_required
+def delete_comment(id):
+    if current_user.role.lower() == "admin":
+        product_id = Comment.query.filter_by(comment_id=id).first().products.product_id  
+        if request.method == "POST":
+            # comment_id = request.form.get("comment_id")
+            
+            Comment.query.filter_by(comment_id=id).delete()
+
+            db.session.commit() 
+            print('Successfully delete comment', 'success')
+        return redirect(url_for('product.show', id=product_id))
+    return redirect(url_for('product.show', id=product_id))
+    
