@@ -102,8 +102,95 @@
                         </ul>
                     </li>
                     
-                    <li class="nav-item me-3 me-lg-0">
-                        <a class="nav-link" href="#"><i class="bi bi-cart-fill" style="font-size:24px" value=5></i></a>
+                    <!-- CART -->
+                    <li class="nav-item me-3 dropdown me-lg-0">
+                        <a class="nav-link"
+                        href="#"
+                        id="cartDropDown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"><i class="bi bi-cart-fill" style="font-size:24px" value=5></i></a>
+                        <!-- <ul class="dropdown-menu bg-dark" aria-labelledby="cartDropDown">
+                            <li class="dropdown-item">
+                                Item 1
+                            </li>
+
+                            <li class="dropdown-item">
+                                Item 2
+                            </li>
+                            
+                            
+                        </ul> -->
+                        
+
+
+                            <ul class="dropdown-menu dropdown-cart bg-dark" role="menu" aria-labelledby="cartDropDown">
+                                <li class="text-light text-center"><h6>You have 4 items in cart</h6></li>
+                                <li>
+                                    <span class="item">
+                                    <span class="item-left">
+                                        <img src="{{ url_for('static', filename='/img/products/bac-xiu-da.png')}}" alt="" width="70"/>
+                                        <span class="item-info">
+                                            <span>Item name</span>
+                                            <span class="item-dropdown-price">23$</span>
+                                            <span class="item-quantity">Quantity: 01</span>
+                                        </span>
+                                    </span>
+                                    <span class="item-right">
+                                        <button class="btn pull-right"><span><i class="bi bi-x-square-fill"></i></span></button>
+                                    </span>
+                                </span>
+                                </li>
+                                <li>
+                                    <span class="item">
+                                    <span class="item-left">
+                                        <img src="http://lorempixel.com/50/50/" alt="" />
+                                        <span class="item-info">
+                                            <span>Item name</span>
+                                            <span>23$</span>
+                                        </span>
+                                    </span>
+                                    <span class="item-right">
+                                        <button class="btn btn-xs btn-danger pull-right">x</button>
+                                    </span>
+                                </span>
+                                </li>
+                                <li>
+                                    <span class="item">
+                                    <span class="item-left">
+                                        <img src="http://lorempixel.com/50/50/" alt="" />
+                                        <span class="item-info">
+                                            <span>Item name</span>
+                                            <span>23$</span>
+                                        </span>
+                                    </span>
+                                    <span class="item-right">
+                                        <button class="btn btn-xs btn-danger pull-right">x</button>
+                                    </span>
+                                </span>
+                                </li>
+                                <li>
+                                    <span class="item">
+                                    <span class="item-left">
+                                        <img src="http://lorempixel.com/50/50/" alt="" />
+                                        <span class="item-info">
+                                            <span>Item name</span>
+                                            <span>23$</span>
+                                        </span>
+                                    </span>
+                                    <span class="item-right">
+                                        <button class="btn btn-xs btn-danger pull-right">x</button>
+                                    </span>
+                                </span>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="text-center"><a href="{{ url_for('main.show_all') }}" class="card-btm btn btn-primary py-1 px-2"> View Cart</a></li>
+                            </ul>
+                        </li>
+                        </ul>
+                               
+                    
+
                     </li>
                     
                     {% else %}

@@ -211,9 +211,59 @@ div.form-field-contact-input {
     background: none;
     position: absolute;
 }
+ul.dropdown-cart{
+    border-color: rgb(119, 119, 119);
+    border-radius: 0.6rem;
+    box-shadow: 10px 10px 38px -13px rgb(119, 119, 119, 0.5);
+    min-width: 250px;
+}
+ul.dropdown-cart li .item{
+    color:white;
+    display:block;
+    padding:3px 10px;
+    margin: 3px 0;
+}
 
+ul.dropdown-cart li .item:hover{
+    color: black;
+    background-color:#f3f3f3;
+}
 
-
+ul.dropdown-cart li .item:hover .item-right button {
+    color: #8d0404;
+}
+ul.dropdown-cart li .item:after{
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+ul.dropdown-cart li .item-left span.item-info span.item-dropdown-price {
+    color: red;
+    font-weight: bold;
+}
+ul.dropdown-cart li .item-left{
+    float:left;
+}
+ul.dropdown-cart li .item-left img,
+ul.dropdown-cart li .item-left span.item-info{
+    float:left;
+}
+ul.dropdown-cart li .item-left span.item-info{
+    margin-left:10px;   
+}
+ul.dropdown-cart li .item-left span.item-info span{
+    display:block;
+}
+ul.dropdown-cart li .item-right{
+    float:right;
+}
+ul.dropdown-cart li .item-right button{
+    color: red;
+    margin-top:14px;
+}
 .form-select,
 .example {
     border: 1px solid #8b1e1e;

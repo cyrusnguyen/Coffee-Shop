@@ -51,6 +51,13 @@ def show(id):
     
     return render_template('view.html', product=SQLdetails, user = user_information, form=comm_form, productForm = productForm)
 
+@productbp.route('/cart/<id>', methods=['GET', 'POST'])
+@login_required
+def show_cart(id):
+    cart_details = Cart.query.filter_by(user_id=id).first()
+    
+    return render_template('cart.html', cart=cart_details)
+
 
 @productbp.route('/create-product', methods=['GET', 'POST'])
 @login_required

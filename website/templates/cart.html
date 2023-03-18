@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="tg-innerbanner tg-haslayout tg-parallax tg-bginnerbanner" data-z-index="-100" data-appear-top-offset="600"
+    data-parallax="scroll" data-image-src="/static/images/parallax/bgparallax-07.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="tg-innerbannercontent">
+                    <h1>Cart</h1>
+                    <ol class="tg-breadcrumb">
+                        <li><a href="javascript:void(0);">Home</a></li>
+                        <li class="tg-active">Confirm</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--************************************
+				Inner Banner End
+        *************************************-->
+
+<div class="container">
+    <form method="POST">
+    <table id="cart" class="table table-hover table-condensed">
+        <thead>
+            <tr>
+                <th style="width:50%">Product Name</th>
+                <th style="width:13%">Price</th>
+                <th style="width:8%">Quantity</th>
+                <th style="width:19%" class="text-center">Total</th>
+                <th style="width:10%"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-th="Product">
+                    <div class="row">
+                        <div class="col-sm-2 hidden-xs"><img src="{{url_for('static', filename='/img/products/bac-xiu-da.png')}}" alt="Sản phẩm 1" class="img-responsive"
+                                width="100">
+                        </div>
+                        <div class="col-sm-10">
+                            <h4 class="nomargin">Item 1</h4>
+                            
+                        </div>
+                    </div>
+                </td>
+                
+                <td data-th="Price">10.000đ</td>
+                <td>
+                <span class="amount">Quantity</span> 
+                </td>
+                
+                <td data-th="Subtotal" class="text-center">Total</td>
+                <td class="actions" data-th="">
+                    
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="visible-xs">
+                
+               
+                <td class="text-center"><strong>Total 10.000đ</strong>
+                </td>
+                
+            </tr>
+            <tr>
+                <td>
+                    <a href="/danh-sach-san-pham" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                    
+                </td>
+                <td colspan="2" class="hidden-xs"> 
+                    <p class="text-right"><strong>Total quantity</strong></p>
+                    <a href="/gio-hang" class="btn btn-warning"><i class="fa fa-angle-left"></i> Update cart </a>
+                    
+                </td>
+                <td class="hidden-xs text-center"><strong>Total quantity đ</strong>
+                </td>
+                <p></p>
+                <td><input type="submit" value="Thanh toán" name="ThanhToan" >
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    </form> 
+</div>
+
+{% endblock %}
