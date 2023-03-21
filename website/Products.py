@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, session
 from .models import Product, Comment, User, Cart
 from website.forms import CommentForm, ContactUsForm, BasicInfoForm, PurchaseTicketForm, DeleteInfoForm
 from flask_login import login_required, current_user
@@ -41,7 +41,7 @@ def show(id):
         #read the product amount from the form
         PurchasedTicketInfo = Cart(
                         amount = productForm.productNo.data,
-                        user = current_user,
+                        users = current_user,
                         product = SQLdetails)
         db.session.add(PurchasedTicketInfo) 
         db.session.commit() 
@@ -64,26 +64,19 @@ def show_cart(id):
 def create_product():
     print('Method type: ', request.method)
     bi_form = BasicInfoForm()
-    
+    print(bi_form.category.data)
     if bi_form.validate_on_submit():
         upload_file = check_upload_file(bi_form)
-        new_product = Product(name = bi_form.product_name.data,
-        description = bi_form.description.data,
-        image = upload_file,
-        price = bi_form.price.data,
-        date_start = bi_form.s_date.data,
-        date_end = bi_form.e_date.data,
-        time_start = bi_form.s_time.data,
-        time_end = bi_form.e_time.data,
-        producer = bi_form.producer.data,
-        status = bi_form.status.data,
-        style = bi_form.d_style.data,
-        productNo = bi_form.number_of_products.data,
-        address = bi_form.address.data + ", " + bi_form.zipcode.data,
-        city = bi_form.city.data,
-        country = bi_form.country.data,
         
-        user = current_user
+        new_product = Product(
+            name = bi_form.product_name.data,
+            description = bi_form.description.data,
+            image = upload_file,
+            price = bi_form.price.data,
+            quantity = bi_form.number_of_products.data,
+            category_id = int(bi_form.category.data),
+            status = bi_form.status.data,
+
         )
         db.session.add(new_product)
 
@@ -101,7 +94,7 @@ def check_upload_file(form):
   #get the current path of the module file… store image file relative to this path  
   BASE_PATH = os.path.dirname(__file__)
   #upload file location – directory of this file/static/image
-  upload_path = os.path.join(BASE_PATH,'static/img/product',secure_filename(filename))
+  upload_path = os.path.join(BASE_PATH,'static/img/products',secure_filename(filename))
   #store relative path in DB as image location in HTML is relative
   db_upload_path = secure_filename(filename)
   #save the file and return the db upload path  

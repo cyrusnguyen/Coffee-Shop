@@ -1,17 +1,19 @@
 #import flask - from the package import class
-from flask import Flask 
+from flask import Flask, session
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask import Blueprint, render_template
+from datetime import timedelta
 
-db=SQLAlchemy()
-app=Flask(__name__)
+
+app = Flask(__name__)
+db = SQLAlchemy(app)
 def create_app():
   
     
-    app.debug=True
-    app.secret_key='supersecretkey'
+    app.debug = True
+    app.secret_key ='supersecretkey'
     # #set the app configuration data 
     app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///Product.db'
     # #initialize db with flask app
@@ -28,8 +30,17 @@ def create_app():
     
     #set the name of the login function that lets user login
     # in our case it is auth.login (blueprintname.viewfunction name)
+    # Set session timeout to 5mins
     login_manager.login_view='auth.login'
+    login_manager.needs_refresh_message = (u"Session timedout, please re-login")
+    login_manager.needs_refresh_message_category = "info"
     login_manager.init_app(app)
+    @app.before_request
+    def before_request():
+        session.permanent = True
+        app.permanent_session_lifetime = timedelta(minutes=15)
+    
+    
 
     #create a user loader function takes userid and returns User
     from .models import User  # importing here to avoid circular references
@@ -45,6 +56,9 @@ def create_app():
     app.register_blueprint(products.productbp)
     from . import auth
     app.register_blueprint(auth.bp)
+
+    from . import cart
+    app.register_blueprint(cart.cartbp)
    
     
     return app

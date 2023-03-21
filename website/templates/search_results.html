@@ -15,14 +15,26 @@
                 <div class="card">
                     <img src="{{ url_for('static', filename = 'img/products/' + result[0].image)}}" class="img-fluid">
                     <div class="card-body">
-                        <h3 class="title"><a href="{{ url_for('product.show', id = result[0].product_id) }}">{{result[0].name}}</a></h3>
+                        <h4 class="title"><a href="{{ url_for('product.show', id = result[0].product_id) }}">{{result[0].name}}</a></h4> 
+                        
+                        <h6 class="text">Price: ${{result[0].price}}</h6>
                         <p class="text">{{result.category_name}}</p>
-                    
-                        <a href="{{ url_for('product.show', id = result.product_id) }}" class="card-btm btn btn-primary py-1 px-2">
-                            More</a>
+
                     </div>
-                    <div class="{{'card-footer ' ~ result[0].status.lower() | replace(' ', '_')}}">
-                        <small class="text-muted ">{{result[0].status}}</small>
+                    <div class="card-footer ">
+                        {% set url = url_for( "cart.add_to_cart", id=result[0].product_id) %}
+                            <form method="POST" action="{{ url }}">
+                                <div class="row text-center">
+                                
+                                    <input type="hidden" name="product_quantity" value=1>
+                                    
+                                    <button type="submit"
+                                    class="btn btn-primary btn-sm"
+                                    id="addToCart-1">
+                                    <i class="bi bi-cart-fill"></i> ADD TO CART
+                                    </button>
+                                </div>
+                            </form>
                     </div>
                 </div>
             </div>

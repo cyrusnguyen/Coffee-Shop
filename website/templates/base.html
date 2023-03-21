@@ -102,6 +102,30 @@
                         </ul>
                     </li>
                     
+                    
+                    
+                    {% else %}
+                    <li class="nav-item me-1">
+                        <a type="button" class="btn btn-primary nav-item" href="{{ url_for('auth.register') }}">Sign up</a>
+                    </li>
+                    <li class="nav-item me-1">
+                        <a type="button" class="btn btn-primary nav-item" href="{{ url_for('auth.login') }}">Log In</a>
+                    </li>
+                    
+                    
+                    {% endif %}
+
+                    {% if session.get('session_shopping_cart') %}
+                    {% set shopping_cart = session['session_shopping_cart']['Shopping_cart'] %}
+                    {% set shopping_cart_length = shopping_cart|length %}
+                    {% else %}
+                    {% set shopping_cart = None %}
+                    {% set shopping_cart_length = 0 %}
+                    {% endif %}
+                    
+
+
+                    
                     <!-- CART -->
                     <li class="nav-item me-3 dropdown me-lg-0">
                         <a class="nav-link"
@@ -109,7 +133,7 @@
                         id="cartDropDown"
                         role="button"
                         data-bs-toggle="dropdown"
-                        aria-expanded="false"><i class="bi bi-cart-fill" style="font-size:24px" value=5></i></a>
+                        aria-expanded="false"><i class="bi bi-cart-fill" style="font-size:24px" value={{ shopping_cart_length }}></i></a>
                         <!-- <ul class="dropdown-menu bg-dark" aria-labelledby="cartDropDown">
                             <li class="dropdown-item">
                                 Item 1
@@ -122,68 +146,43 @@
                             
                         </ul> -->
                         
-
+                        
 
                             <ul class="dropdown-menu dropdown-cart bg-dark" role="menu" aria-labelledby="cartDropDown">
-                                <li class="text-light text-center"><h6>You have 4 items in cart</h6></li>
+                                <li class="text-light text-center">
+                                    <h6>You have {{ shopping_cart_length }} items in cart</h6></li>
+                                    <div class="dropdown-divider"></div>
+                                {% if shopping_cart!=None %}
+                                {% for item in shopping_cart %}
+                                
                                 <li>
                                     <span class="item">
-                                    <span class="item-left">
-                                        <img src="{{ url_for('static', filename='/img/products/bac-xiu-da.png')}}" alt="" width="70"/>
-                                        <span class="item-info">
-                                            <span>Item name</span>
-                                            <span class="item-dropdown-price">23$</span>
-                                            <span class="item-quantity">Quantity: 01</span>
+                                        <span class="item-left">
+                                            <img src="{{ url_for('static', filename='/img/products/' + item['product_dict']['image'])}}" alt="" width="70"/>
+                                            <span class="item-info">
+                                                <span>{{ item['product_dict']['name']|truncate(20) }}</span>
+                                                <span class="item-dropdown-price">${{ item.total }}</span>
+                                                <span class="item-quantity">Quantity: {{ item.quantity }}</span>
+                                            </span>
+                                        </span>
+                                        <span class="item-right">
+                                            <button class="btn pull-right"><span><i class="bi bi-x-square-fill"></i></span></button>
                                         </span>
                                     </span>
-                                    <span class="item-right">
-                                        <button class="btn pull-right"><span><i class="bi bi-x-square-fill"></i></span></button>
-                                    </span>
-                                </span>
                                 </li>
-                                <li>
-                                    <span class="item">
-                                    <span class="item-left">
-                                        <img src="http://lorempixel.com/50/50/" alt="" />
-                                        <span class="item-info">
-                                            <span>Item name</span>
-                                            <span>23$</span>
-                                        </span>
-                                    </span>
-                                    <span class="item-right">
-                                        <button class="btn btn-xs btn-danger pull-right">x</button>
-                                    </span>
-                                </span>
+                                {% endfor %}
+                                
+
+                                <div class="dropdown-divider"></div>
+                                    <li class="text-light text-center">
+                                        <h6>Cart total: ${{ session['session_shopping_cart']['cart_total'] }}</h6>
+                                    </li>
+                                {% else %}
+                                <li class="text-light text-center">
+                                    <a href="{{url_for('main.show_all')}}">Add more products here</h6>
                                 </li>
-                                <li>
-                                    <span class="item">
-                                    <span class="item-left">
-                                        <img src="http://lorempixel.com/50/50/" alt="" />
-                                        <span class="item-info">
-                                            <span>Item name</span>
-                                            <span>23$</span>
-                                        </span>
-                                    </span>
-                                    <span class="item-right">
-                                        <button class="btn btn-xs btn-danger pull-right">x</button>
-                                    </span>
-                                </span>
-                                </li>
-                                <li>
-                                    <span class="item">
-                                    <span class="item-left">
-                                        <img src="http://lorempixel.com/50/50/" alt="" />
-                                        <span class="item-info">
-                                            <span>Item name</span>
-                                            <span>23$</span>
-                                        </span>
-                                    </span>
-                                    <span class="item-right">
-                                        <button class="btn btn-xs btn-danger pull-right">x</button>
-                                    </span>
-                                </span>
-                                </li>
-                                <li class="divider"></li>
+                                {% endif %}
+                                <div class="dropdown-divider"></div>
                                 <li class="text-center"><a href="{{ url_for('main.show_all') }}" class="card-btm btn btn-primary py-1 px-2"> View Cart</a></li>
                             </ul>
                         </li>
@@ -192,16 +191,6 @@
                     
 
                     </li>
-                    
-                    {% else %}
-                    <li class="nav-item me-1">
-                        <a type="button" class="btn btn-primary nav-item" href="{{ url_for('auth.register') }}">Sign up</a>
-                    </li>
-                    <li class="nav-item me-1">
-                        <a type="button" class="btn btn-primary nav-item" href="{{ url_for('auth.login') }}">Log In</a>
-                    </li>
-                    
-                    {% endif %}
                     
                   
                 

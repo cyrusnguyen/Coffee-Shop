@@ -43,27 +43,18 @@
                     {% endif %}
                     {% endwith %}
                     
-                    {%if current_user.is_authenticated %}
-                        {% if product.status != "Available"%}
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product" disabled>
+                    
+                    {% if product.status != "Available"%}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product" disabled>
+                        Get Product
+                    </button>
+                    {% else %}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product" >
                             Get Product
                         </button>
-                        {% else %}
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product" >
-                                Get Product
-                            </button>
-                        {% endif %}
-                    {% else %}
-                        {% if product.status == "Cancelled" or product.status == "Sold Out"%}
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#product" disabled>
-                                Get Product
-                            </button>
-                        {% else %}
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Loginrequired">
-                                Get Product
-                            </button>
-                        {% endif %}
                     {% endif %}
+
+    
                     
 
                     {%  if user.role|lower == "admin" %}
@@ -90,35 +81,17 @@
                                 </div> 
                                 <!-- Modal body -->
                                 <div class="container mt-3">
-                                    <!-- <form action="/action_page.php"> -->
+                                
                                         <div class="px-5 my-3">
                                             <p>Remaining Products: {{product.quantity}}</p>
-                                            {{wtf.render_form(productForm)}}
+                                            {{wtf.render_form(productForm,"/add-to-cart/{0}".format(product.product_id))}} 
                                             
                                         </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Modal -->
-                    <div class="modal text-dark" id="Loginrequired" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">LOGIN REQUIRED!</h5>
-                            
-                            </div>
-                            <div class="modal-body">
-                            <p>Please Login to purchase this product.</p>
-                            <p>Don't have an account. <a href="{{ url_for('auth.register')}}">Sign up</a></p>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" onclick="window.location.href='{{ url_for( 'auth.login') }}';" class="btn btn-primary">LOG IN >></button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+                    
 
                 </div>
 
