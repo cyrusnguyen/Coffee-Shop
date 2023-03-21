@@ -154,22 +154,24 @@
                                     <div class="dropdown-divider"></div>
                                 {% if shopping_cart!=None %}
                                 {% for item in shopping_cart %}
-                                
+                                {% set remove_url = url_for( "cart.remove_from_cart", id=item['product_dict']['product_id']) %}
+                                <form method="POST" action="{{ remove_url }}">
                                 <li>
                                     <span class="item">
                                         <span class="item-left">
                                             <img src="{{ url_for('static', filename='/img/products/' + item['product_dict']['image'])}}" alt="" width="70"/>
                                             <span class="item-info">
-                                                <span>{{ item['product_dict']['name']|truncate(20) }}</span>
+                                                <span>{{ item['product_dict']['name']|truncate(25) }}</span>
                                                 <span class="item-dropdown-price">${{ item.total }}</span>
                                                 <span class="item-quantity">Quantity: {{ item.quantity }}</span>
                                             </span>
                                         </span>
                                         <span class="item-right">
-                                            <button class="btn pull-right"><span><i class="bi bi-x-square-fill"></i></span></button>
+                                            <button type="submit" class="btn pull-right"><span><i class="bi bi-x-square-fill"></i></span></button>
                                         </span>
                                     </span>
                                 </li>
+                                </form>
                                 {% endfor %}
                                 
 

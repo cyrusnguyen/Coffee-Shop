@@ -20,11 +20,7 @@ def add_to_cart(id):
     # If there's already a cart, check if item is in cart
     if session.get('session_shopping_cart'):
         product_list = session['session_shopping_cart']['Shopping_cart']
-    # else:
-    #     product_list.append(product_dict)
-    #     session['session_shopping_cart'] = {"Shopping_cart": product_list}
-    #     print(session.get('session_shopping_cart'))
-    
+
     if request.method == "POST":
         product_quantity = int(request.form.get("product_quantity"))
         session.pop('session_shopping_cart', None)
@@ -58,19 +54,18 @@ def get_cart_price(cart_items):
     return cart_price
 
 
-# @cartbp.route('/remove-from-cart/<id>', methods=['GET', 'POST'])
-# def remove_from_cart(id):
-#     if current_user.role.lower() == "admin":
-#         product_id = Product.query.filter_by(comment_id=id).first().products.product_id  
-#         if request.method == "POST":
-#             # comment_id = request.form.get("comment_id")
-            
-#             Comment.query.filter_by(comment_id=id).delete()
+@cartbp.route('/remove-from-cart/<id>', methods=['GET', 'POST'])
+def remove_from_cart(id):
+    
+    product_list = session['session_shopping_cart']['Shopping_cart']
+    if request.method == "POST":
+        session.pop('session_shopping_cart', None)
+        new_product_list = [item for item in product_list if item['product_id']!=id]
+        session['session_shopping_cart'] = {"Shopping_cart": new_product_list}
+        session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
 
-#             db.session.commit() 
-#             print('Successfully delete comment', 'success')
-#         return redirect(url_for('product.show', id=product_id))
-#     return redirect(url_for('main.show_all'))
+    return redirect(request.referrer)
+
 
 # @cartbp.route('/confirm-cart/<id>', methods=['GET', 'POST'])
 # @login_required
