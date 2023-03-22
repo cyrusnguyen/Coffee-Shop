@@ -44,14 +44,44 @@ def add_to_cart(id):
             }
             product_list.append(product_dict)
         session['session_shopping_cart'] = {"Shopping_cart": product_list}
-        print(session.get('session_shopping_cart'))
         session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
+        session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
     return redirect(request.referrer)
+
 def get_cart_price(cart_items):
     cart_price = 0
     for item in cart_items:
         cart_price += float(item['total'])
     return cart_price
+
+def get_cart_quantity(cart_items):
+    cart_quantity = 0
+    for item in cart_items:
+        cart_quantity += int(item['quantity'])
+    return int(cart_quantity)
+
+@cartbp.route('/update-cart', methods=['GET', 'POST'])
+def update_cart():
+
+    product_list = session['session_shopping_cart']['Shopping_cart']
+
+    if request.method == "POST":
+        new_product_list = []
+        session.pop('session_GioHang', None)
+
+        for product in product_list:
+            quantity_input = int(request.form.get('product_quantity' + str(product['product_id'])))
+            product['quantity'] = quantity_input
+            product['total'] = product['product_dict']['price'] * product['quantity']
+            product['modified_at'] = datetime.now()
+            new_product_list.append(product)
+
+        session['session_shopping_cart'] = {"Shopping_cart": new_product_list}
+        session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
+        session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
+
+    return redirect(request.referrer)
+
 
 
 @cartbp.route('/remove-from-cart', methods=['GET', 'POST'])
@@ -65,7 +95,7 @@ def remove_from_cart():
         new_product_list = [item for item in product_list if item['product_id']!=id]
         session['session_shopping_cart'] = {"Shopping_cart": new_product_list}
         session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
-
+        session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
     return redirect(request.referrer)
 
 

@@ -28,6 +28,7 @@
         *************************************-->
 
 <div class="container">
+    <form method="POST" action="{{url_for('cart.update_cart')}}">
     <table id="cart" class="table table-hover table-bordered table-striped">
         <thead class="table-secondary">
             <tr class="align-middle">
@@ -41,9 +42,11 @@
         </thead>
         <tbody>
             {% if shopping_cart != None %}
+        
             {% for item in shopping_cart %}
             {% set remove_url_cart = url_for( "cart.remove_from_cart", id=item['product_dict']['product_id']) %}
-            <form id="cart_remove_item" method="POST" action="{{ remove_url_cart }}">
+            
+            
             <tr>
                 
                 <td>
@@ -62,7 +65,7 @@
                 </td>
                 <td class="align-middle text-center" data-th="Price">${{ item['product_dict']['price'] }}</td>
                 <td class="align-middle text-center">
-                <span class="amount text-center"><input type="number" id="product_quantity" name="product_quantity" min="1" value={{ item.quantity }}></span> 
+                <span class="amount text-center"><input type="number" id="product_quantity" name="product_quantity{{ item['product_dict']['product_id'] }}" min="1" value={{ item['quantity'] }}></span> 
                 </td>
                 
                 <td data-th="Subtotal" class="align-middle text-center">
@@ -96,9 +99,9 @@
                 </td>
                 
                 <td colspan="2" class="hidden-xs text-center"> 
-                    <p class="text-right"><strong>Total quantity: </strong></p>
+                    <p class="text-right"><strong>Total quantity: {{ session['session_shopping_cart']['cart_quantity'] }}</strong></p>
                     
-                    <input type="submit" class="btn btn-primary" value="Update cart"><i class="fa fa-angle-left"></i>  </a>
+                    <input type="submit" class="btn btn-primary" name="update_cart" value="Update cart">
 
                 </td>
                 
