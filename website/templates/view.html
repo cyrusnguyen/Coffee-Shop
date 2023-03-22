@@ -84,7 +84,20 @@
                                 
                                         <div class="px-5 my-3">
                                             <p>Remaining Products: {{product.quantity}}</p>
-                                            {{wtf.render_form(productForm,"/add-to-cart/{0}".format(product.product_id))}} 
+                                            <input type="hidden" name="product_quantity" value="{{ productForm.product_quantity.data }}">
+                                            {% set url = url_for( "cart.add_to_cart", id=product.product_id) %}
+                                            <form method="POST" action="{{ url }}">
+                                                <div class="row text-center">
+                                                    <label for="product_quantity">Amount of products:</label>
+                                                    <input type="number" id="product_quantity" name="product_quantity" min="1">
+                                                    
+                                                    <button type="submit"
+                                                    class="btn btn-primary btn-sm"
+                                                    id="addToCart-1">
+                                                    <i class="bi bi-cart-fill"></i> ADD TO CART
+                                                    </button>
+                                                </div>
+                                            </form>
                                             
                                         </div>
                                 </div>

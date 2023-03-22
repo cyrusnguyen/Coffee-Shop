@@ -178,6 +178,9 @@ div.form-field-contact-input {
         object-fit: cover;
     }
 }
+
+/* DROPDOWN CART */
+
 a.nav-link .bi-cart-fill:after{
     content:attr(value);
     font-size:12px;
@@ -275,7 +278,13 @@ ul.dropdown-cart li .item-right button{
     border: 1px solid #8b1e1e;
 }
 
-
+/* CART */
+td input[type='number']{
+    width: 50px;
+} 
+table#cart thead tr{
+    height: 80px;
+}
 
 
 

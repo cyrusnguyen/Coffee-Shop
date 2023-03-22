@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="tg-innerbanner tg-haslayout tg-parallax tg-bginnerbanner" data-z-index="-100" data-appear-top-offset="600"
+<div class="" data-appear-top-offset="600"
     data-parallax="scroll" data-image-src="/static/images/parallax/bgparallax-07.jpg">
     <div class="container">
         <div class="row">
@@ -28,64 +28,84 @@
         *************************************-->
 
 <div class="container">
-    <form method="POST">
-    <table id="cart" class="table table-hover table-condensed">
-        <thead>
-            <tr>
-                <th style="width:50%">Product Name</th>
-                <th style="width:13%">Price</th>
-                <th style="width:8%">Quantity</th>
+    <table id="cart" class="table table-hover table-bordered table-striped">
+        <thead class="table-secondary">
+            <tr class="align-middle">
+                <th class="align-middle text-center" style="width:10%"></th>
+                <th style="width:42%">Product Name</th>
+                <th style="width:13%" class="text-center">Price</th>
+                <th style="width:8%" class="text-center">Quantity</th>
                 <th style="width:19%" class="text-center">Total</th>
-                <th style="width:10%"> </th>
+                <th style="width:8%"></th>
             </tr>
         </thead>
         <tbody>
+            {% if shopping_cart != None %}
+            {% for item in shopping_cart %}
+            {% set remove_url_cart = url_for( "cart.remove_from_cart", id=item['product_dict']['product_id']) %}
+            <form id="cart_remove_item" method="POST" action="{{ remove_url_cart }}">
             <tr>
-                <td data-th="Product">
+                
+                <td>
                     <div class="row">
-                        <div class="col-sm-2 hidden-xs"><img src="{{url_for('static', filename='/img/products/bac-xiu-da.png')}}" alt="Sản phẩm 1" class="img-responsive"
-                                width="100">
+                        <div class="col-sm-2 hidden-xs"><img src="{{url_for('static', filename='/img/products/' + item['product_dict']['image'])}}" alt="Item" class="img-responsive"
+                                width="80">
                         </div>
-                        <div class="col-sm-10">
-                            <h4 class="nomargin">Item 1</h4>
-                            
-                        </div>
+                        
                     </div>
                 </td>
-                
-                <td data-th="Price">10.000đ</td>
-                <td>
-                <span class="amount">Quantity</span> 
+                <td class="align-middle">
+                    <div class="col-sm-10 ">
+                        <h4 class=""><a href="{{url_for('product.show', id=item['product_dict']['product_id'])}}">{{ item['product_dict']['name'] }}</a></h4>
+                        
+                    </div>
+                </td>
+                <td class="align-middle text-center" data-th="Price">${{ item['product_dict']['price'] }}</td>
+                <td class="align-middle text-center">
+                <span class="amount text-center"><input type="number" id="product_quantity" name="product_quantity" min="1" value={{ item.quantity }}></span> 
                 </td>
                 
-                <td data-th="Subtotal" class="text-center">Total</td>
-                <td class="actions" data-th="">
+                <td data-th="Subtotal" class="align-middle text-center">
+                    ${{ item['product_dict']['price'] * item.quantity}}
+                </td>
+                <td class="actions align-middle text-center" data-th="">
+                    <form action="{{remove_url_cart}}" method="POST"><button class="btn"
+                        name="product_id_remove" type="submit"
+                        formaction="{{remove_url_cart}}"
+                        value={{item['product_dict']['product_id']}}><span><i class="bi bi-x-square-fill"></i></span></button>
+                    </form>
                     
                 </td>
+                
             </tr>
+            
+            
+            {% endfor %}
+            {% endif %}
+            
         </tbody>
         <tfoot>
-            <tr class="visible-xs">
-                
-               
-                <td class="text-center"><strong>Total 10.000đ</strong>
-                </td>
-                
-            </tr>
+
+            
             <tr>
+                <td class="text-center"><strong>Total items: {{ shopping_cart_length }}</strong>
+                </td>
                 <td>
-                    <a href="/danh-sach-san-pham" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                    <a href="{{url_for('main.show_all')}}" class="btn btn-primary "><i class="bi bi-chevron-double-left"></i> Continue Shopping</a>
                     
                 </td>
-                <td colspan="2" class="hidden-xs"> 
-                    <p class="text-right"><strong>Total quantity</strong></p>
-                    <a href="/gio-hang" class="btn btn-warning"><i class="fa fa-angle-left"></i> Update cart </a>
+                
+                <td colspan="2" class="hidden-xs text-center"> 
+                    <p class="text-right"><strong>Total quantity: </strong></p>
                     
+                    <input type="submit" class="btn btn-primary" value="Update cart"><i class="fa fa-angle-left"></i>  </a>
+
                 </td>
-                <td class="hidden-xs text-center"><strong>Total quantity đ</strong>
+                
+                <td class="hidden-xs text-center"><strong>Total:  ${{ session['session_shopping_cart']['cart_total'] }}</strong>
                 </td>
                 <p></p>
-                <td><input type="submit" value="Thanh toán" name="ThanhToan" >
+                <td><input type="submit" class="btn btn-primary" value="Purchase" name="Purchase" >
                 </td>
             </tr>
         </tfoot>

@@ -86,6 +86,11 @@
                         <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
                             <li class="dropdown-item">
                                 <a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="bi bi-person-check"> Profile </i></a>
+
+                            </li>
+                            <li class="dropdown-item">
+                                <a class="nav-link" href="{{ url_for('cart.view_cart') }}"><i class="bi bi-bag-fill"> View Cart </i></a>
+                                
                             </li>
                             
                             {% if current_user.role|lower == "admin" %}
@@ -155,7 +160,7 @@
                                 {% if shopping_cart!=None %}
                                 {% for item in shopping_cart %}
                                 {% set remove_url = url_for( "cart.remove_from_cart", id=item['product_dict']['product_id']) %}
-                                <form method="POST" action="{{ remove_url }}">
+                                <form id="dropdown_cart_remove_item" method="POST" action="{{ remove_url }}">
                                 <li>
                                     <span class="item">
                                         <span class="item-left">
@@ -167,7 +172,8 @@
                                             </span>
                                         </span>
                                         <span class="item-right">
-                                            <button type="submit" class="btn pull-right"><span><i class="bi bi-x-square-fill"></i></span></button>
+                                            <input type="hidden" name="product_id_remove" value={{item['product_dict']['product_id']}}>
+                                            <button type="submit" class="btn pull-right" id="remove-from-dropdown-cart-submit" name="remove-from-dropdown-cart-submit"><span><i class="bi bi-x-square-fill"></i></span></button>
                                         </span>
                                     </span>
                                 </li>
@@ -185,7 +191,7 @@
                                 </li>
                                 {% endif %}
                                 <div class="dropdown-divider"></div>
-                                <li class="text-center"><a href="{{ url_for('main.show_all') }}" class="card-btm btn btn-primary py-1 px-2"> View Cart</a></li>
+                                <li class="text-center"><a href="{{ url_for('cart.view_cart') }}" class="card-btm btn btn-primary py-1 px-2"> View Cart</a></li>
                             </ul>
                         </li>
                         </ul>
@@ -259,7 +265,7 @@
                                         <div class="row">
                                             <div class="col-8">
                                                 <a class="btn btn-primary"
-                                                    onclick="alert('You are listed'); parent.location='home.html';">Send</a>
+                                                    onclick="alert('You are listed'); parent.location='{{ url_for('main.index')}}';">Send</a>
                                             </div>
                                         </div>
 

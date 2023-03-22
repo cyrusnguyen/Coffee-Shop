@@ -29,7 +29,7 @@ def add_to_cart(id):
         for product in product_list:
             # Add quantity if exists
             if product['product_id'] == id:
-                product['quantity'] += 1
+                product['quantity'] += product_quantity
                 product['total'] = product_obj.price * product['quantity']
                 product['modified_at'] = datetime.now()
                 isExists = True
@@ -54,11 +54,13 @@ def get_cart_price(cart_items):
     return cart_price
 
 
-@cartbp.route('/remove-from-cart/<id>', methods=['GET', 'POST'])
-def remove_from_cart(id):
-    
+@cartbp.route('/remove-from-cart', methods=['GET', 'POST'])
+def remove_from_cart():
+
     product_list = session['session_shopping_cart']['Shopping_cart']
+
     if request.method == "POST":
+        id = request.form.get('product_id_remove')
         session.pop('session_shopping_cart', None)
         new_product_list = [item for item in product_list if item['product_id']!=id]
         session['session_shopping_cart'] = {"Shopping_cart": new_product_list}
@@ -67,20 +69,21 @@ def remove_from_cart(id):
     return redirect(request.referrer)
 
 
-# @cartbp.route('/confirm-cart/<id>', methods=['GET', 'POST'])
-# @login_required
-# def confirm_cart(id):
-#     if current_user.role.lower() == "admin":
-#         product_id = Product.query.filter_by(comment_id=id).first().products.product_id  
-#         if request.method == "POST":
-#             # comment_id = request.form.get("comment_id")
-            
-#             Comment.query.filter_by(comment_id=id).delete()
+@cartbp.route('/view-cart', methods=['GET', 'POST'])
+def view_cart():
 
-#             db.session.commit() 
-#             print('Successfully delete comment', 'success')
-#         return redirect(url_for('product.show', id=product_id))
-#     return redirect(url_for('main.show_all'))
+
+    return render_template('cart.html')
+
+# @cartbp.route('/view-cart/<id>', methods=['GET', 'POST'])
+# def confirm_cart(id):
+    
+#     product_id = Product.query.filter_by(comment_id=id).first().products.product_id  
+#     if request.method == "POST":
+#         # comment_id = request.form.get("comment_id")
+        
+#         print('Successfully delete comment', 'success')
+#     return redirect(url_for('product.show', id=product_id))
 
 @cartbp.route('/delete-cart')
 def delete_cart():
