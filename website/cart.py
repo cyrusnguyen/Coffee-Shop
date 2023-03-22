@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, request, session
+from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from .models import Product, User, Cart, CartProduct
 from flask_login import login_required, current_user
 from sqlalchemy import desc
@@ -25,27 +25,45 @@ def add_to_cart(id):
         product_quantity = int(request.form.get("product_quantity"))
         session.pop('session_shopping_cart', None)
 
+
         isExists = False
+        isFlash = False
         for product in product_list:
             # Add quantity if exists
             if product['product_id'] == id:
-                product['quantity'] += product_quantity
-                product['total'] = product_obj.price * product['quantity']
-                product['modified_at'] = datetime.now()
-                isExists = True
+                if product_quantity <= product['product_dict']['quantity'] and product['quantity'] <= product['product_dict']['quantity']:
+                    product['quantity'] += product_quantity
+                    product['total'] = product_obj.price * product['quantity']
+                    product['modified_at'] = datetime.now()
+                    isExists = True
+                else:
+                    session['session_shopping_cart'] = {"Shopping_cart": product_list}
+                    session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
+                    session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
+                    flash("Error! Only {0} products in stock".format(product['product_dict']['quantity']), 'error')
+                    isFlash = True 
         if not isExists:
-            product_dict = {
-                "product_dict": product_obj.as_dict(),
-                "product_id": id,
-                "quantity": product_quantity,
-                "created_at": datetime.now(),
-                "modified_at": None,
-                "total": product_obj.price * product_quantity
-            }
-            product_list.append(product_dict)
+            if product_quantity <= product_obj.quantity:
+                product_dict = {
+                    "product_dict": product_obj.as_dict(),
+                    "product_id": id,
+                    "quantity": product_quantity,
+                    "created_at": datetime.now(),
+                    "modified_at": None,
+                    "total": product_obj.price * product_quantity
+                }
+                product_list.append(product_dict)
+            else:
+                session['session_shopping_cart'] = {"Shopping_cart": product_list}
+                session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
+                session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
+                flash("Error! Only {0} products in stock".format(product_obj.quantity), 'error')
+                isFlash = True 
         session['session_shopping_cart'] = {"Shopping_cart": product_list}
         session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
         session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
+        if isFlash == False and session.get('_flashes') != None: 
+            session['_flashes'].clear()
     return redirect(request.referrer)
 
 def get_cart_price(cart_items):
@@ -71,16 +89,22 @@ def update_cart():
 
         for product in product_list:
             quantity_input = int(request.form.get('product_quantity' + str(product['product_id'])))
-            product['quantity'] = quantity_input
-            product['total'] = product['product_dict']['price'] * product['quantity']
-            product['modified_at'] = datetime.now()
-            new_product_list.append(product)
+            if quantity_input <= int(product['product_dict']['quantity']):
+                product['quantity'] = quantity_input
+                product['total'] = product['product_dict']['price'] * product['quantity']
+                product['modified_at'] = datetime.now()
+                new_product_list.append(product)
+            else: 
+                session['session_shopping_cart'] = {"Shopping_cart": product_list}
+                session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
+                session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
+                return render_template('cart.html', ErrorMessage="There's not enough stock. Remaining products for {0}: {1}".format(product['product_dict']['name'],product['product_dict']['quantity']))
 
         session['session_shopping_cart'] = {"Shopping_cart": new_product_list}
         session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
         session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
 
-    return redirect(request.referrer)
+    return render_template('cart.html')
 
 
 
