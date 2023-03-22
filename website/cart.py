@@ -31,7 +31,7 @@ def add_to_cart(id):
         for product in product_list:
             # Add quantity if exists
             if product['product_id'] == id:
-                if product_quantity <= product['product_dict']['quantity'] and product['quantity'] <= product['product_dict']['quantity']:
+                if product_quantity <= product['product_dict']['quantity'] and product_quantity+product['quantity'] <= product['product_dict']['quantity']:
                     product['quantity'] += product_quantity
                     product['total'] = product_obj.price * product['quantity']
                     product['modified_at'] = datetime.now()
@@ -41,6 +41,7 @@ def add_to_cart(id):
                     session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
                     session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
                     flash("Error! Only {0} products in stock".format(product['product_dict']['quantity']), 'error')
+                    isExists = True
                     isFlash = True 
         if not isExists:
             if product_quantity <= product_obj.quantity:
