@@ -1,41 +1,130 @@
 {% extends 'base.html' %}
+
 {% import "bootstrap/form.html" as wtf %}
+
 {% block header %}
 {% endblock %}
 {% block content %}
 
-<div class="page-header">
-    <h4>{{heading}}</h4>
-</div>
+<!--Start content-->
+<section class="page-section bg-dark text-light shadow-lg">
+
+    <div class="container-fluid col-xl-6 col-xs-12 p-5">
+
+
+        <!--Row 1-->
+        <div class="row g-0 bg mb-5">
+            <div class="header d-flex justify-content-center">
+                <H1 class="my-5 h1-header">User History</h1>
+            </div>
+        </div>
 
 
 
-<div class="container-fluid">
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert" aria-label="close">x</button>
-        {{message}}
+        <!--Row 2-->
+        <div class="row g-0">
+            <div class=" d-flex justify-content-center col-md-5">
+                <img class="img-fluid" src="{{url_for('static', filename='img/'+'user.svg')}}" alt="">
+            </div>
+            <div class="d-flex text-light mx-auto col-lg-4 col-md-4">
+                <div class="m-lg-auto m-sm-0">
+
+                    <h2 class="date mb-3">{{current_user.name}}</h2>
+                    <P class="mb-1">Email: {{current_user.email}}</P>
+                    <P class="mb-1">Address: {{current_user.address}}</P>
+                    <P class="mb-1">Phone: {{current_user.phone_number}}</P>
+                    <br>
+
+
+                    <a type="button" class="btn btn-primary" href="{{ url_for('main.update_user') }}">
+                        Update Information
+                    </a>
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#history_Modal" >
+                        Cart
+                    </button>
+                    <!-- The Modal -->
+                    <div class="modal" id="history_Modal">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content text-dark">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h3 class="modal-title "> CART PRODUCTS</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <!-- Modal body -->
+                                <div class="modal-body bg-light">
+                                    <h5 class=" text-center">Your orders</h5>
+                                    <div class="row bg-light shadow p-2 mt-2">
+                                        {% for cart in user_carts %}
+
+                                        <div class="col-12 p-5 shadow-lg mt-2">
+                                            <div class=" text-center">
+                                                <p>CartID | {{cart.cart_id}}</p>
+                                                <p>Quantity | {{cart.total_quantity}}</p>
+                                                <p>Total | ${{cart.subtotal}}</p>
+                                            </div>
+                                        </div>
+                                       
+                                        {% endfor %}
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class=" col-12 p-5">
+            <div class="item_form">
+                <div class="text">
+                    <h2 class="my-4">Your Unpublished Products</h2>
+                </div>
+
+                <div class="row text-light">
+                    <!--Grid column-->
+
+                    
+                        
+                        {% for product in product %}
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="card">
+                                <img src="{{ url_for('static', filename = 'img/' + product.image)}}" class="img-fluid">
+                                <div class="card-body">
+                                    <h3 class="title"><a href="{{ url_for('product.show', id = product.id) }}">{{product.name}}</a></h3> 
+                                    <p class="text" style="color:black">{{product.style}}</p>
+                                    <h5 class="title">Where</h5>
+                                    <p class="text" style="color:black">{{product.city + ", " + product.country}}</p>
+                                    <h5 class="title">When</h5>
+                                    <p class="text" style="color:black">{{product.date_end}}</p>
+                                    <a href="{{ url_for('product.show', id = product.id) }}" class="card-btm btn btn-primary py-1 px-2"> More</a>
+                                </div>
+                                <div class="{{'card-footer ' ~ product.status.lower() | replace(' ', '_')}}">
+                                    <small class="text-muted ">{{product.status}}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    
+
+                </div>
+            </div>
+        </div>             
+
+      
+
+
+
     </div>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-</div>
-
-
-
-<!-- Form rendering is simple and easy if using bootstrap -->
-<div class="col-md-6">
-    {{wtf.render_form(form)}}
-</div>
-
-<!-- When you have login form, then do show the user a link to register -->
-{% if heading|lower =='login' %}
-<div class="col-md-4">
-    <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
-</div>
-{% endif %}
+</section>
+<!--end content-->
 
 {% endblock %}

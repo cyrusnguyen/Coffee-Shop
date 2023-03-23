@@ -82,7 +82,7 @@ def get_cart_quantity(cart_items):
 @cartbp.route('/update-cart', methods=['GET', 'POST'])
 def update_cart():
 
-    product_list = session['session_shopping_cart']['Shopping_cart']
+    product_list = session['session_shopping_cart']['Shopping_cart'] if session.get('session_shopping_cart') else []
 
     if request.method == "POST":
         new_product_list = []
@@ -126,19 +126,48 @@ def remove_from_cart():
 
 @cartbp.route('/view-cart', methods=['GET', 'POST'])
 def view_cart():
-
-
     return render_template('cart.html')
 
-# @cartbp.route('/view-cart/<id>', methods=['GET', 'POST'])
-# def confirm_cart(id):
+
+@cartbp.route('/purchase', methods=['GET', 'POST'])
+def purchase():
     
-#     product_id = Product.query.filter_by(comment_id=id).first().products.product_id  
-#     if request.method == "POST":
-#         # comment_id = request.form.get("comment_id")
-        
-#         print('Successfully delete comment', 'success')
-#     return redirect(url_for('product.show', id=product_id))
+    product_list = session['session_shopping_cart']['Shopping_cart']
+
+
+    if request.method == "POST":
+        new_cart = Cart(
+            user_id = current_user.user_id,
+            subtotal = session['session_shopping_cart']['cart_total'],
+            total_quantity = session['session_shopping_cart']['cart_total'],
+            delivery_address = str(request.form.get('uaddress')),
+            email = request.form.get('uemail'),
+            phoneNo = request.form.get('uphone')
+        )
+        for product in product_list:
+            new_cart_product = CartProduct(
+                quantity = product['quantity'],
+                total = product['total'],
+                created_at = product['created_at'],
+                modified_at = product['modified_at'],
+                carts = new_cart,
+                product_id = product['product_dict']['product_id']
+            )
+            remaining_products = product['product_dict']['quantity'] -  product['quantity']
+            if remaining_products < 1:
+                db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
+                    quantity = remaining_products,
+                    status = "Sold Out"
+                ))
+            else:
+                db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
+                        quantity = remaining_products
+                    ))
+            db.session.add(new_cart_product)
+        db.session.commit()
+        session.pop('session_shopping_cart', None)
+        return redirect(url_for('main.index'))
+    return render_template('purchase.html')
 
 @cartbp.route('/delete-cart')
 def delete_cart():

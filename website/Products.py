@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, request, session
 from .models import Product, Comment, User, Cart
-from website.forms import CommentForm, ContactUsForm, BasicInfoForm, PurchaseTicketForm, DeleteInfoForm
+from website.forms import CommentForm, ContactUsForm, BasicInfoForm, PurchaseProductForm, DeleteInfoForm
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 from . import db, app
@@ -33,19 +33,17 @@ def show(id):
 
 
     comm_form = CommentForm()
-    productForm = PurchaseTicketForm()
-    #if productForm.productNo.data == 
-   ## print(SQLdetails.id)##
+    productForm = PurchaseProductForm()
+
     print('Method type: ', request.method)
-    if productForm.validate_on_submit():
+    # if productForm.validate_on_submit():
         #read the product amount from the form
-        PurchasedTicketInfo = Cart(
-                        amount = productForm.productNo.data,
-                        users = current_user,
-                        product = SQLdetails)
-        db.session.add(PurchasedTicketInfo) 
-        db.session.commit() 
-        print('Successfully sent message', 'success')
+        # PurchasedTicketInfo = Cart(
+        #                 amount = productForm.productNo.data,
+        #                 users = current_user,
+        #                 product = SQLdetails)
+        # db.session.add(PurchasedTicketInfo) 
+        # db.session.commit() 
 
     
     

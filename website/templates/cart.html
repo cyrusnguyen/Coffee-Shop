@@ -9,24 +9,22 @@
 {% block content %}
 <h2 class="text-danger">{{ErrorMessage}}</h2>
 <div class="" data-appear-top-offset="600"
-    data-parallax="scroll" data-image-src="/static/images/parallax/bgparallax-07.jpg">
+    data-parallax="scroll" >
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="tg-innerbannercontent">
+                <div class="">
                     <h1>Cart</h1>
                     <ol class="tg-breadcrumb">
-                        <li><a href="javascript:void(0);">Home</a></li>
-                        <li class="tg-active">Confirm</li>
+                        <li><a href="{{url_for('main.index')}}">Home</a></li>
+                        <li class="tg-active">View Cart</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!--************************************
-				Inner Banner End
-        *************************************-->
+
 
 <div class="container">
     <form method="POST" action="{{url_for('cart.update_cart')}}">
@@ -42,10 +40,15 @@
             </tr>
         </thead>
         <tbody>
+            {% if session.get('session_shopping_cart') %}
+            {% set cart_quantity = session['session_shopping_cart']['cart_quantity'] %}
+            {% set cart_total = session['session_shopping_cart']['cart_total'] %}
+            {% endif %}
+
             {% if shopping_cart != None %}
-        
             {% for item in shopping_cart %}
             {% set remove_url_cart = url_for( "cart.remove_from_cart", id=item['product_dict']['product_id']) %}
+
             
             
             <tr>
@@ -100,16 +103,24 @@
                 </td>
                 
                 <td colspan="2" class="hidden-xs text-center"> 
-                    <p class="text-right"><strong>Total quantity: {{ session['session_shopping_cart']['cart_quantity'] }}</strong></p>
+                    <p class="text-right"><strong> Total quantity: 
+                        {{ cart_quantity }}
+                    
+                    </strong></p>
                     
                     <input type="submit" class="btn btn-primary" name="update_cart" value="Update cart">
 
                 </td>
                 
-                <td class="hidden-xs text-center"><strong>Total:  ${{ session['session_shopping_cart']['cart_total'] }}</strong>
+                <td class="hidden-xs text-center"><strong>Total:  
+                    $ {{cart_total}}
+                    </strong>
                 </td>
                 <p></p>
-                <td><input type="submit" class="btn btn-primary" value="Purchase" name="Purchase" >
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmCartModal">
+                        Confirm Cart
+                    </button>
                 </td>
             </tr>
         </tfoot>
@@ -117,4 +128,103 @@
     </form> 
 </div>
 
+
+<!-- Confirm Cart Modal -->
+<div class="modal fade" id="confirmCartModal" tabindex="-1" aria-labelledby="confirmCartModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header float-right">
+          <h5>Confirm Cart</h5>
+        
+        </div>
+        <div class="modal-body">
+            
+  
+  
+          <div>
+            
+            
+            <table class="table table-bordered">
+    <thead>
+        <tr class="align-middle">
+            <th class="align-middle text-center">#</th>
+            <th style="width:42%">Product Name</th>
+            <th class="text-center">Price</th>
+            <th class="text-center">Quantity</th>
+            <th class="text-center">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+            
+            {% if shopping_cart != None %}
+            {% for item in shopping_cart %}
+           
+            
+            <tr>
+                
+                <td>
+                    <div class="align-middle text-center">
+                        {{loop.index}}
+                    </div>
+                </td>
+                <td class="align-middle">
+                    <div class="col-sm-10 ">
+                        <h6 class="">{{ item['product_dict']['name'] }}</h6>
+                        
+                    </div>
+                </td>
+                <td class="align-middle text-center" data-th="Price">${{ item['product_dict']['price'] }}</td>
+                <td class="align-middle text-center">
+                    {{ item['quantity'] }}
+                </td>
+                
+                <td data-th="Subtotal" class="align-middle text-center">
+                    ${{ item['product_dict']['price'] * item.quantity}}
+                </td>
+                
+            </tr>
+            
+            
+            {% endfor %}
+            {% endif %}
+            
+        </tbody>
+        <tfoot>
+
+            
+            <tr>
+                <td>
+                </td>
+                <td class="text-center">
+                    <strong>Total items: {{ shopping_cart_length }}</strong>
+                    
+                </td>
+                
+                <td colspan="2" class="hidden-xs text-center"> 
+                    <p class="text-right"><strong> Total quantity: 
+                        {{ cart_quantity }}
+                    
+                    </strong></p>
+
+                </td>
+                
+                <td class="hidden-xs text-center"><strong>Subtotal:  
+                    ${{cart_total}}
+                    </strong>
+                </td>
+            </tr>
+        </tfoot>
+  </table>
+  
+          </div>
+  
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{{url_for('cart.purchase')}}" class="btn btn-primary">Purchase</a>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

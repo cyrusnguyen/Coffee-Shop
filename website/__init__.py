@@ -15,11 +15,11 @@ def create_app():
     app.debug = True
     app.secret_key ='supersecretkey'
     # #set the app configuration data 
-    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///Product.db'
+    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///Product.db?check_same_thread=False'
     # #initialize db with flask app
     db.init_app(app)
     with app.app_context():
-        from .models import Product, Comment, User, Cart, Category
+        from .models import Product, Comment, User, Cart, Category, Anonymous
         db.create_all()
         db.session.commit()
 
@@ -32,13 +32,14 @@ def create_app():
     # in our case it is auth.login (blueprintname.viewfunction name)
     # Set session timeout to 5mins
     login_manager.login_view='auth.login'
+    login_manager.anonymous_user = Anonymous
     login_manager.needs_refresh_message = (u"Session timedout, please re-login")
     login_manager.needs_refresh_message_category = "info"
     login_manager.init_app(app)
     @app.before_request
     def before_request():
         session.permanent = True
-        app.permanent_session_lifetime = timedelta(minutes=15)
+        app.permanent_session_lifetime = timedelta(minutes=45)
     
     
 

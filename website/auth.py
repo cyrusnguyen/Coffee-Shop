@@ -2,7 +2,7 @@ from flask import (
     Blueprint, flash, render_template, request, url_for, redirect
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User
+from .models import User, Product, Cart
 from .forms import LoginForm, RegisterForm
 from flask_login import login_user, login_required, current_user, logout_user
 from . import db
@@ -39,7 +39,7 @@ def login():
             return redirect(url_for('main.index'))
         else:
             flash(error, 'danger')
-    return render_template('user.html', form = login_form, heading = 'Login')
+    return render_template('auth.html', form = login_form, heading = 'Login')
 # Route for registration
 @bp.route('/register', methods=['GET','POST'])
 def register():
@@ -67,7 +67,14 @@ def register():
         return redirect(url_for('main.index'))
     #the else is called when there is a get message
     else:
-        return render_template('user.html', form=registration_form, heading='Register')
+        return render_template('auth.html', form=registration_form, heading='Register')
+
+@bp.route('/view-profile', methods=['GET','POST'])
+@login_required
+def view_profile():
+    user_carts = Cart.query.filter_by(user_id=current_user.user_id).all()
+    print(user_carts)
+    return render_template('user.html', user_carts=user_carts)
 
 # Route for logging out
 @bp.route('/logout')

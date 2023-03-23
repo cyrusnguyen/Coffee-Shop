@@ -85,7 +85,7 @@
                         </a>
                         <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
                             <li class="dropdown-item">
-                                <a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="bi bi-person-check"> Profile </i></a>
+                                <a class="nav-link" href="{{ url_for('auth.view_profile') }}"><i class="bi bi-person-check"> Profile </i></a>
 
                             </li>
                             <li class="dropdown-item">
@@ -166,7 +166,7 @@
                                         <span class="item-left">
                                             <img src="{{ url_for('static', filename='/img/products/' + item['product_dict']['image'])}}" alt="" width="70"/>
                                             <span class="item-info">
-                                                <span>{{ item['product_dict']['name']|truncate(25) }}</span>
+                                                <span class="item-dropdown-name"><a href="{{url_for('product.show', id=item['product_dict']['product_id'])}}"><strong>{{ item['product_dict']['name']|truncate(25) }}</strong></a></span>
                                                 <span class="item-dropdown-price">${{ item.total }}</span>
                                                 <span class="item-quantity">Quantity: {{ item.quantity }}</span>
                                             </span>

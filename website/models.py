@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from . import db
 from datetime import datetime, time
 import json
+from flask_login import AnonymousUserMixin
 
 class User(db.Model, UserMixin):
     __tablename__='users'
@@ -17,17 +18,22 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(60), nullable=False, default='user')
     
     comments = db.relationship('Comment', backref='users')
-    cart = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
+    carts = db.relationship('Cart', backref='carts')
     
 
     def get_id(self):
         return (self.user_id)
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     # def __repr__(self):
     #     return "<Name: {}, user_id: {}>".format(self.name, self.user_id)
 
+class Anonymous(AnonymousUserMixin):
+  def __init__(self):
+    self.name = 'Guest'
+    self.user_id = 'Guest'
+    
 class Product(db.Model):
     __tablename__ = 'products'
     def defaultValue(column_name):
@@ -65,11 +71,11 @@ class CartProduct(db.Model):
     quantity = db.Column(db.Integer, nullable=False, default=0)
     total = db.Column(db.Float, nullable=False, default=0)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
-    
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    category_id = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
+    modified_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+
+    cart_id = db.Column(db.Integer, db.ForeignKey('carts.cart_id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
-    
+   
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
@@ -85,9 +91,9 @@ class Category(db.Model):
 
     products = db.relationship('Product', backref='categories')
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def __repr__(self):
         return "<Name: {}, category_id: {}>".format(self.name, self.category_id)
     
@@ -100,9 +106,9 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def __repr__(self):
         return "<Comment: {}>".format(self.text)
 
@@ -114,25 +120,29 @@ class ContactUs(db.Model):
     subject = db.Column(db.String(50))
     message = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def __repr__(self):
         return "<Comment: {}>".format(self.text)
     
 class Cart(db.Model):
     __tablename__ = 'carts'
     cart_id = db.Column(db.Integer, primary_key=True)
-    total_amount = db.Column(db.Float)
+    subtotal = db.Column(db.Float, nullable=False)
+    total_quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
+    delivery_address = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    phoneNo = db.Column(db.String(50), nullable=False)
 
     #add the foreign keys
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    products = db.relationship('Product', backref='carts')
+    cart_products = db.relationship('CartProduct', backref='carts')
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def __repr__(self):
         return '{}, of user {}'.format(self.cart_id, self.user_id)
 

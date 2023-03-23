@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% import "bootstrap/form.html" as wtf %}
+
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<h2 class="text-danger">{{ErrorMessage}}</h2>
+<div class="" data-appear-top-offset="600"
+    data-parallax="scroll" >
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="">
+                    <h1>Cart</h1>
+                    <ol class="">
+                        <li><a href="{{url_for('main.index')}}">Home</a></li>
+                        <li><a href="{{url_for('cart.view_cart')}}">View Cart</a></li>
+                        <li>Purchase</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <h3>Order details</h3>
+    <table id="cart" class="table table-hover table-bordered table-striped">
+        <thead class="table-secondary">
+            <tr class="align-middle">
+                <th class="align-middle text-center" style="width:10%"></th>
+                <th style="width:42%">Product Name</th>
+                <th style="width:13%" class="text-center">Price</th>
+                <th style="width:12%" class="text-center">Quantity</th>
+                <th style="width:23%" class="text-center">Total</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% if session.get('session_shopping_cart') %}
+            {% set cart_quantity = session['session_shopping_cart']['cart_quantity'] %}
+            {% set cart_total = session['session_shopping_cart']['cart_total'] %}
+            {% endif %}
+
+            {% if shopping_cart != None %}
+            {% for item in shopping_cart %}
+            
+            
+            <tr>
+                
+                <td>
+                    <div class="row">
+                        <div class="col-sm-2 hidden-xs"><img src="{{url_for('static', filename='/img/products/' + item['product_dict']['image'])}}" alt="Item" class="img-responsive"
+                                width="80">
+                        </div>
+                        
+                    </div>
+                </td>
+                <td class="align-middle">
+                    <div class="col-sm-10 ">
+                        <h6 class="">{{ item['product_dict']['name'] }}</h6>
+                        
+                    </div>
+                </td>
+                <td class="align-middle text-center" data-th="Price">${{ item['product_dict']['price'] }}</td>
+                <td class="align-middle text-center">
+                <span class="amount text-center">{{ item['quantity'] }}</span> 
+                </td>
+                
+                <td data-th="Subtotal" class="align-middle text-center">
+                    ${{ item['product_dict']['price'] * item.quantity}}
+                </td>
+
+                
+            </tr>
+            
+            
+            {% endfor %}
+            {% endif %}
+            
+        </tbody>
+        <tfoot>
+
+            
+            <tr>
+                <td colspan="2" class="text-center"><strong>Total items: {{ shopping_cart_length }}</strong>
+                </td>
+
+                
+                <td colspan="2" class="hidden-xs align-middle text-center"> 
+                    <p class="text-right"><strong> Total quantity: 
+                        {{ cart_quantity }}
+                    
+                    </strong></p>
+                    
+                  
+                </td>
+                
+                <td class="hidden-xs text-center"><strong>Subtotal:  
+                    ${{cart_total}}
+                    </strong>
+                </td>
+
+
+            </tr>
+        </tfoot>
+    </table>
+    <br>
+    <h3>User details</h3>
+    <form method="POST" action="{{url_for('cart.purchase')}}">
+        <div class="form-group">
+            <label for="uname">Full name:</label>
+            <input type="text" class="form-control" id="uname" placeholder="Enter your name" value="{{current_user.name}}" name="uname" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group">
+            <label for="uname">Address:</label>
+            <input type="text" class="form-control" id="uaddress" placeholder="Enter your address" value="{{current_user.address}}" name="uaddress" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group">
+            <label for="uname">Email:</label>
+            <input type="text" class="form-control" id="uemail" placeholder="Enter your email" value="{{current_user.email}}" name="uemail" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="form-group">
+            <label for="uname">Phone number:</label>
+            <input type="tel" class="form-control" id="uphone" placeholder="Enter your phone number" value="{{current_user.phone_number}}" name="uphone" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+          
+        <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" name="remember" required> I agree on <a href="#">Policy and Terms</a>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Check this checkbox to continue.</div>
+        </label>
+        </div>
+          <button type="submit" class="btn btn-primary">Checkout</button>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -85,7 +85,7 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Create')
 
 # Purchase product form
-class PurchaseTicketForm(FlaskForm):
+class PurchaseProductForm(FlaskForm):
     product_quantity = IntegerField('Amount of products', [ validators.InputRequired()])
     submit = SubmitField("Add to Cart")
     

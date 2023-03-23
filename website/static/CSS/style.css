@@ -14,12 +14,19 @@ h4,
     color: rgb(210, 23, 23);
 }
 
-
 a {
     text-decoration: none;
     color: rgb(180, 0, 0);
 }
-
+.modal {
+    width: 700px;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%; 
+    margin-left: -200px;
+    margin-top: -100px;
+ }
 .navbar-dark .navbar-toggler,
 .navbar-toggler-icon {
     color: rgb(0, 255, 119);
