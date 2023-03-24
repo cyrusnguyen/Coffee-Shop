@@ -35,19 +35,7 @@ def show(id):
     comm_form = CommentForm()
     productForm = PurchaseProductForm()
 
-    print('Method type: ', request.method)
-    # if productForm.validate_on_submit():
-        #read the product amount from the form
-        # PurchasedTicketInfo = Cart(
-        #                 amount = productForm.productNo.data,
-        #                 users = current_user,
-        #                 product = SQLdetails)
-        # db.session.add(PurchasedTicketInfo) 
-        # db.session.commit() 
-
-    
-    
-    return render_template('view.html', product=SQLdetails, user = user_information, form=comm_form, productForm = productForm)
+    return render_template('view.html', product = SQLdetails, user = user_information, form = comm_form, productForm = productForm)
 
 @productbp.route('/cart/<id>', methods=['GET', 'POST'])
 @login_required
@@ -60,9 +48,7 @@ def show_cart(id):
 @productbp.route('/create-product', methods=['GET', 'POST'])
 @login_required
 def create_product():
-    print('Method type: ', request.method)
     bi_form = BasicInfoForm()
-    print(bi_form.category.data)
     if bi_form.validate_on_submit():
         upload_file = check_upload_file(bi_form)
         
@@ -79,10 +65,9 @@ def create_product():
         db.session.add(new_product)
 
         db.session.commit()
-        print('Successfully sent message', 'success')
         
 
-        return redirect(url_for('main.show_all'))
+        return redirect(url_for('main.show_products'))
     return render_template('create_product.html', form=bi_form)
 
 def check_upload_file(form):
@@ -125,8 +110,6 @@ def update_product(id):
         if bi_form.validate_on_submit():
             upload_file = check_upload_file(bi_form)
             
-            
-            print(bi_form.category.data)
             update = Product.query.filter_by(product_id = id).update(dict(
             name = bi_form.product_name.data,
             description = bi_form.description.data,
@@ -138,10 +121,9 @@ def update_product(id):
             ))
 
             db.session.commit()
-            print('Successfully sent message', 'success')
             
 
-            return redirect(url_for('main.show_all'))
+            return redirect(url_for('main.show_products'))
         return render_template('update_product.html', form=bi_form, product = SQLdetails, user = user_information)
         
     else:
@@ -159,8 +141,6 @@ def delete_product(id):
 
     if current_user.role.lower() == "admin":
 
-
-        print('Method type: ', request.method)
         bi_form = DeleteInfoForm()
         
         if bi_form.validate_on_submit():
@@ -170,10 +150,9 @@ def delete_product(id):
 
             Product.query.filter_by(product_id = id).delete()
             db.session.commit()
-            print('Successfully sent message', 'success')
             
 
-            return redirect(url_for('main.show_all', id = '1'))
+            return redirect(url_for('main.show_products', id = '1'))
         return render_template('delete_product.html', form=bi_form, product = SQLdetails,user = user_information)
         
     else:
@@ -203,7 +182,6 @@ def comment(id):
 
         db.session.add(comment) 
         db.session.commit() 
-        print('Successfully sent message', 'success')
     return redirect(url_for('product.show', id=id))
 
 @productbp.route('/<id>/delete-comment', methods=['GET', 'POST'])
@@ -217,7 +195,6 @@ def delete_comment(id):
             Comment.query.filter_by(comment_id=id).delete()
 
             db.session.commit() 
-            print('Successfully delete comment', 'success')
         return redirect(url_for('product.show', id=product_id))
     return redirect(url_for('product.show', id=product_id))
     

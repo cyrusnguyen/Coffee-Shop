@@ -30,7 +30,6 @@ def login():
             login_user(u1)
             
             # nextp = request.args.get('next') #this gives the url from where the login page was accessed
-            # print(nextp)
             # flash('Logged in successfully!', 'success')
             # if next is None or not nextp.startswith('/'):
             #     return redirect(url_for('index'))

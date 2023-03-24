@@ -17,7 +17,6 @@ cur.execute('''CREATE TABLE IF NOT EXISTS products
 
 # Insert data from multiple JSON files to categories
 for filename in os.listdir(cat_dir):
-    print(filename)
     if filename.endswith('.json'):
         
         with open(os.path.join(cat_dir, filename), 'r') as f:
@@ -30,7 +29,6 @@ for filename in os.listdir(cat_dir):
 
 # Insert data from multiple JSON files to categories
 for filename in os.listdir(product_dir):
-    print(filename)
     if filename.endswith('.json'):
         
         with open(os.path.join(product_dir, filename), 'r') as f:

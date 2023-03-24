@@ -1,7 +1,7 @@
 from asyncio import events
 from multiprocessing.dummy import current_process
 from re import X
-from flask import Blueprint, render_template, url_for, redirect, request
+from flask import Blueprint, Markup, render_template, url_for, redirect, request, session
 from sqlalchemy.orm import load_only
 from flask_login import login_required, current_user
 from website.forms import ContactUsForm, BasicInfoForm, Updateform
@@ -16,7 +16,6 @@ bp = Blueprint('main', __name__)
 @bp.route('/')
 def index():
     featured_products = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).limit(3).all()
-    print(featured_products)
     latest_products = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).order_by(desc(Product.released_date)).limit(6).all()
     latest_product = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).order_by(desc(Product.sold_quantity)).limit(1).all()
     
@@ -24,13 +23,18 @@ def index():
 
 @bp.route('/success')
 def success():
-    return render_template('success.html')
+    home_url = url_for('main.index')
+    error_message = '''<div class="container">
+    <h1>Request Successfully Sent!</h1>
+    <p>We have received your request. Thank you</p>
+    <p>Click <a href="{0}">Here</a> to go back to Home Page </p>
+    </div>'''.format(home_url)
+    return render_template('blank.html', ErrorMessage = Markup(error_message))
 
 
 
 @bp.route('/user-history', methods=['GET', 'POST'])
 def user_history():
-    print('Method type: ', request.method)
     cu_form = ContactUsForm()
     UserTickets = Cart.query.filter_by(user = current_user).all()
     product = Product.query.filter(Product.user_id == current_user.id and Product.status ==  "Unpublished")
@@ -42,8 +46,6 @@ def user_history():
         TicketsProduct = TicketsProduct + Product.query.filter((Product.id ==UserTickets[x].product_id)).all()
     
     if cu_form.validate_on_submit():
-
-        print('Successfully sent message', 'success')
         return redirect(url_for('main.user_history'))
 
     return render_template('user_history.html', form=cu_form, user_products = TicketsProduct  , shown_amount = productID, product = product)
@@ -69,7 +71,12 @@ def update_user():
         pwd_hash = generate_password_hash(pwd)
         
 
-        update = User.query.filter_by(id = current_user.id).update(dict(name=uname, password_hash=pwd_hash, emailid=email, phone_number = phone_number, address = address))
+        db.session.query(User).filter_by(id = current_user.id).update(dict(
+            name=uname, 
+            password_hash=pwd_hash, 
+            emailid=email, 
+            phone_number = phone_number, 
+            address = address))
 
 
         db.session.commit()
@@ -79,47 +86,34 @@ def update_user():
     # Else is called when there is a get message
     else:
         return render_template('user.html', form=registration_form, heading='Update Profile')
-# General search
-@bp.route('/search')
-def search():
-    if request.args['search']:
-        print(request.args['search'])
-        dest = "%" + request.args['search'] + '%'
-        search_results = Product.query.filter((Product.description.like(dest))|(Product.name.like(dest))).order_by(desc(Product.name)).all()
-        return render_template('search_results.html', search_results=search_results)
+
+@bp.route('/products/page=<int:page_num>', methods=['GET','POST'])
+@bp.route('/products/', defaults={'page_num': 1}, methods=['GET','POST'])
+def show_products(page_num=1):
+    
+    search_results_query = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).filter(Product.status ==  "Available")
+    all_products = search_results_query.paginate(per_page=12, page=page_num)
+    total_products = len(search_results_query.all())
+    return render_template('all_products.html', search_results = all_products, total_products = total_products)
+    
+
+@bp.route('/search/page=<int:page_num>', methods=['GET', 'POST'])
+@bp.route('/search/', methods=['GET', 'POST'])
+def search_products(page_num=1):
+    if request.form.get('product_search'):
+        search_query = "%" + str(request.form.get('product_search')) + "%"
+        session['search'] = str(request.form.get('product_search'))
     else:
-        return redirect(url_for('main.index'))
-
-# Search by style
-@bp.route('/filterStyle')
-def filterStyle():
-    if request.args['filterStyle']:
-        print(request.args['filterStyle'])
-        dest = "%" + request.args['filterStyle'] + '%'
-        search_results = Product.query.filter(Product.style.like(dest))
-        return render_template('search_results.html', search_results=search_results)
-    else:
-        return redirect(url_for('main.index'))
-
-# Search by status
-@bp.route('/filterStatus')
-def filterStatus():
-    if request.args['filterStatus']:
-        print(request.args['filterStatus'])
-        dest = "%" + request.args['filterStatus'] + '%'
-        search_results = Product.query.filter(Product.status.like(dest))
-        return render_template('search_results.html', search_results=search_results)
-    else:
-        return redirect(url_for('main.index'))
-
-@bp.route('/products/page=<int:page_num>')
-@bp.route('/products/')
-def show_all(page_num=1):
-    all_products_query = db.session.query(Product, Category.name.label("category_name")).join(Category, Product.category_id == Category.category_id, isouter=True).filter(Product.status ==  "Available")
-    total_products = len(all_products_query.all())
-    all_products = all_products_query.paginate(per_page=12, page=page_num)
-    return render_template('search_results.html', search_results=all_products, total_products=total_products)
-
+        search_query = "%" + session['search'] + '%'
+    
+    
+    search_results_query = db.session.query(Product, Category.name.label("category_name")).\
+            join(Category, Product.category_id == Category.category_id, isouter=True).\
+            filter((Product.name.like(search_query))|(Category.name.like(search_query)))
+    all_products = search_results_query.paginate(per_page=12, page=page_num)
+    total_products = len(search_results_query.all())
+    return render_template('search_results.html', search_results = all_products, total_products = total_products)
+    
 @bp.route('/contact-us', methods=['GET', 'POST'])
 def contact_us():
     contact_us_form = ContactUsForm()

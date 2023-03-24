@@ -30,10 +30,10 @@
             <div class="d-flex col-lg-7 px-5 p-5">
                 <div class="m-lg-auto m-sm-0">
                     <h2 class="date mb-3">{{product.date}}</h2>
-                    <P class="mb-1">Price | ${{product.price}}</P>
-                    <P class="mb-1">Status | {{product.status}}</P>
-                    <P class="mb-1">Released Date | {{product.released_date}}</P>
-                    <P class="mb-1">In stock | {{product.quantity}} products</P>
+                    <p class="mb-1">Price | ${{product.price}}</p>
+                    <p class="mb-1">Status | {{product.status}}</p>
+                    <p class="mb-1">Released Date | {{product.released_date}}</p>
+                    <p class="mb-1">In stock | {{product.quantity}} products</p>
               
                     {% with messages = get_flashed_messages() %}
                     {% if messages %}

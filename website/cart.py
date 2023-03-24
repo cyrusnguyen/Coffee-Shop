@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, render_template, flash, redirect, url_for, request, session
+from flask import Blueprint, Markup, render_template, flash, redirect, url_for, request, session
 from .models import Product, User, Cart, CartProduct
 from flask_login import login_required, current_user
 from sqlalchemy import desc
@@ -130,48 +130,54 @@ def view_cart():
 
 
 @cartbp.route('/purchase', methods=['GET', 'POST'])
-def purchase():
-    
-    product_list = session['session_shopping_cart']['Shopping_cart']
-
-
-    if request.method == "POST":
-        new_cart = Cart(
-            user_id = current_user.user_id,
-            subtotal = session['session_shopping_cart']['cart_total'],
-            total_quantity = session['session_shopping_cart']['cart_total'],
-            delivery_address = str(request.form.get('uaddress')),
-            email = request.form.get('uemail'),
-            phoneNo = request.form.get('uphone')
-        )
-        for product in product_list:
-            new_cart_product = CartProduct(
-                quantity = product['quantity'],
-                total = product['total'],
-                created_at = product['created_at'],
-                modified_at = product['modified_at'],
-                carts = new_cart,
-                product_id = product['product_dict']['product_id']
+def purchase(): 
+    if session.get('session_shopping_cart'):
+        product_list = session['session_shopping_cart']['Shopping_cart']
+        if request.method == "POST":
+            new_cart = Cart(
+                user_id = current_user.user_id,
+                subtotal = session['session_shopping_cart']['cart_total'],
+                total_quantity = session['session_shopping_cart']['cart_total'],
+                delivery_address = str(request.form.get('uaddress')),
+                email = request.form.get('uemail'),
+                phoneNo = request.form.get('uphone')
             )
-            remaining_products = product['product_dict']['quantity'] -  product['quantity']
-            if remaining_products < 1:
-                db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
-                    quantity = remaining_products,
-                    status = "Sold Out"
-                ))
-            else:
-                db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
-                        quantity = remaining_products
+            for product in product_list:
+                new_cart_product = CartProduct(
+                    quantity = product['quantity'],
+                    total = product['total'],
+                    created_at = product['created_at'],
+                    modified_at = product['modified_at'],
+                    carts = new_cart,
+                    product_id = product['product_dict']['product_id']
+                )
+                remaining_products = product['product_dict']['quantity'] -  product['quantity']
+                if remaining_products < 1:
+                    db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
+                        quantity = remaining_products,
+                        status = "Sold Out"
                     ))
-            db.session.add(new_cart_product)
-        db.session.commit()
-        session.pop('session_shopping_cart', None)
-        return redirect(url_for('main.index'))
-    return render_template('purchase.html')
+                else:
+                    db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
+                            quantity = remaining_products
+                        ))
+                db.session.add(new_cart_product)
+            db.session.commit()
+            session.pop('session_shopping_cart', None)
+            return redirect(url_for('main.index'))
+        return render_template('purchase.html')
+    else:
+        show_all_url = url_for('main.show_products')
+        error_message = '''<div class="container">
+        <h1>You dont have any products in your cart!</h1>
+        <p>Please <a href="{0}">add more products here</a> to continue. </p>
+        <p>Thank you!</p>
+        </div>'''.format(show_all_url)
+        return render_template('blank.html', ErrorMessage = Markup(error_message))
 
 @cartbp.route('/delete-cart')
 def delete_cart():
-    print("Deleting cart:", session['session_shopping_cart'])
+    # print("Deleting cart:", session['session_shopping_cart'])
     session.pop('session_shopping_cart', None)
     return redirect(url_for('main.index'))
 
