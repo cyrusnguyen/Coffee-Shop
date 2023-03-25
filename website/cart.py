@@ -99,7 +99,7 @@ def update_cart():
                 session['session_shopping_cart'] = {"Shopping_cart": product_list}
                 session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
                 session['session_shopping_cart']['cart_quantity'] = get_cart_quantity(session['session_shopping_cart']['Shopping_cart'])
-                return render_template('cart.html', ErrorMessage="There's not enough stock. Remaining products for {0}: {1}".format(product['product_dict']['name'],product['product_dict']['quantity']))
+                return render_template('cart.html', Message="There's not enough stock. Remaining products for {0}: {1}".format(product['product_dict']['name'],product['product_dict']['quantity']))
 
         session['session_shopping_cart'] = {"Shopping_cart": new_product_list}
         session['session_shopping_cart']['cart_total'] = get_cart_price(session['session_shopping_cart']['Shopping_cart'])
@@ -126,6 +126,13 @@ def remove_from_cart():
 
 @cartbp.route('/view-cart', methods=['GET', 'POST'])
 def view_cart():
+    
+    user_carts = Cart.query.filter_by(user_id=current_user.user_id).all()
+    for cart in user_carts:
+        for product in cart.cart_products:
+            print(product.cart_product_id)
+        print("")
+    
     return render_template('cart.html')
 
 
@@ -137,7 +144,7 @@ def purchase():
             new_cart = Cart(
                 user_id = current_user.user_id,
                 subtotal = session['session_shopping_cart']['cart_total'],
-                total_quantity = session['session_shopping_cart']['cart_total'],
+                total_quantity = session['session_shopping_cart']['cart_quantity'],
                 delivery_address = str(request.form.get('uaddress')),
                 email = request.form.get('uemail'),
                 phoneNo = request.form.get('uphone')
@@ -149,7 +156,9 @@ def purchase():
                     created_at = product['created_at'],
                     modified_at = product['modified_at'],
                     carts = new_cart,
-                    product_id = product['product_dict']['product_id']
+                    product_id = product['product_dict']['product_id'],
+                    name = product['product_dict']['name'],
+                    price = product['product_dict']['price']
                 )
                 remaining_products = product['product_dict']['quantity'] -  product['quantity']
                 if remaining_products < 1:
@@ -164,7 +173,14 @@ def purchase():
                 db.session.add(new_cart_product)
             db.session.commit()
             session.pop('session_shopping_cart', None)
-            return redirect(url_for('main.index'))
+
+            home_url = url_for('main.index')
+            success_message = '''<div class="container">
+            <h1>We have receive your order!</h1>
+            <p>Thanks for supporting us. We will send you an email for the confirmation.</p>
+            <p>Click <a href="{0}">Here</a> to go back to Home Page </p>
+            </div>'''.format(home_url)
+            return render_template('blank.html', Message = Markup(success_message))
         return render_template('purchase.html')
     else:
         show_all_url = url_for('main.show_products')
@@ -173,7 +189,7 @@ def purchase():
         <p>Please <a href="{0}">add more products here</a> to continue. </p>
         <p>Thank you!</p>
         </div>'''.format(show_all_url)
-        return render_template('blank.html', ErrorMessage = Markup(error_message))
+        return render_template('blank.html', Message = Markup(error_message))
 
 @cartbp.route('/delete-cart')
 def delete_cart():

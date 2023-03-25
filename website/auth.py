@@ -1,9 +1,7 @@
-from flask import (
-    Blueprint, flash, render_template, request, url_for, redirect
-)
+from flask import Blueprint, flash, render_template, request, url_for, redirect, Markup
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Product, Cart
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, Updateform
 from flask_login import login_user, login_required, current_user, logout_user
 from . import db
 
@@ -72,8 +70,28 @@ def register():
 @login_required
 def view_profile():
     user_carts = Cart.query.filter_by(user_id=current_user.user_id).all()
-    print(user_carts)
     return render_template('user.html', user_carts=user_carts)
+
+@bp.route('/update-user', methods=['GET','POST'])
+@login_required
+def update_user():
+    UpdateUserForm = Updateform()
+    if (UpdateUserForm.validate_on_submit() == True):
+        
+        uname = UpdateUserForm.user_name.data
+        pwd = UpdateUserForm.password.data
+        email = UpdateUserForm.email_id.data
+        phone_number = UpdateUserForm.phone_number.data
+        address = UpdateUserForm.address.data
+        pwd_hash = generate_password_hash(pwd)
+        db.session.query(User).filter_by(user_id=current_user.user_id).update(dict(
+            name=uname, password_hash=pwd_hash, email=email, phone_number=phone_number, address=address
+        ))
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    else:
+        return render_template('update_user.html', form=UpdateUserForm, heading="Update Profile")
+    
 
 # Route for logging out
 @bp.route('/logout')

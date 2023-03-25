@@ -68,6 +68,8 @@ class CartProduct(db.Model):
 
     
     cart_product_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True)
+    price = db.Column(db.Float, nullable=False, default=0)
     quantity = db.Column(db.Integer, nullable=False, default=0)
     total = db.Column(db.Float, nullable=False, default=0)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
@@ -78,9 +80,6 @@ class CartProduct(db.Model):
    
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-    def __repr__(self):
-        return "<Name: {}, cart_product_id: {}>".format(self.name, self.cart_product_id)
 
 class Category(db.Model):
     __tablename__ = 'categories'

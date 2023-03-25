@@ -29,63 +29,10 @@ def success():
     <p>We have received your request. Thank you</p>
     <p>Click <a href="{0}">Here</a> to go back to Home Page </p>
     </div>'''.format(home_url)
-    return render_template('blank.html', ErrorMessage = Markup(error_message))
+    return render_template('blank.html', Message = Markup(error_message))
 
 
 
-@bp.route('/user-history', methods=['GET', 'POST'])
-def user_history():
-    cu_form = ContactUsForm()
-    UserTickets = Cart.query.filter_by(user = current_user).all()
-    product = Product.query.filter(Product.user_id == current_user.id and Product.status ==  "Unpublished")
-    productID = []
-    TicketsProduct = []     
-    productID.append(1)#Throwaway data 
-    for x in range(len(UserTickets)):
-        productID.append(UserTickets[x].id)
-        TicketsProduct = TicketsProduct + Product.query.filter((Product.id ==UserTickets[x].product_id)).all()
-    
-    if cu_form.validate_on_submit():
-        return redirect(url_for('main.user_history'))
-
-    return render_template('user_history.html', form=cu_form, user_products = TicketsProduct  , shown_amount = productID, product = product)
-
-@bp.route('/update-user', methods=['GET', 'POST'])
-@login_required
-def update_user():
-    registration_form = Updateform()
-    
-    if (registration_form.validate_on_submit() == True):
-        uname = registration_form.user_name.data
-        pwd = registration_form.password.data
-        email = registration_form.email_id.data
-        phone_number = registration_form.phone_number.data
-
-        address = registration_form.address.data
-
-
-        
-
-        
-        # Generate password hash - Not the raw password
-        pwd_hash = generate_password_hash(pwd)
-        
-
-        db.session.query(User).filter_by(id = current_user.id).update(dict(
-            name=uname, 
-            password_hash=pwd_hash, 
-            emailid=email, 
-            phone_number = phone_number, 
-            address = address))
-
-
-        db.session.commit()
-        
-        # Commit to the database and redirect to HTML page
-        return redirect(url_for('main.user_history'))
-    # Else is called when there is a get message
-    else:
-        return render_template('user.html', form=registration_form, heading='Update Profile')
 
 @bp.route('/products/page=<int:page_num>', methods=['GET','POST'])
 @bp.route('/products/', defaults={'page_num': 1}, methods=['GET','POST'])

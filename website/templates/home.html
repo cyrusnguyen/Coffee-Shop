@@ -25,7 +25,7 @@
                                     <h3><a href="{{ url_for('product.show', id = product[0].product_id) }}">{{product[0].name}}</a></h3>
                                     <hr>
                                     <p>{{product[0].description}}</p>
-                                    <button class="btn btn-primary">More...</button>
+                                    <a type="button" class="btn btn-primary" href="{{ url_for('product.show', id = product[0].product_id) }}">More</a></h3>
                                 </div>
                             </div>                                
                         </div>
@@ -42,7 +42,7 @@
                                     <h3><a href="{{ url_for('product.show', id = product[0].product_id) }}">{{product[0].name}}</a></h3>
                                     <hr>
                                     <p>{{product[0].description}}</p>
-                                    <button class="btn btn-primary">More...</button>
+                                    <a type="button" class="btn btn-primary" href="{{ url_for('product.show', id = product[0].product_id) }}">More</a></h3>
                                 </div>
                             </div>                                
                         </div>

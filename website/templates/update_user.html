@@ -28,9 +28,23 @@
 
 
 
-<div class="col-md-4">
-    {{wtf.render_form(form)}}
-</div>
+    
+    <form class='page-section bg-dark text-dark p-5 shadow-lg' action="{{ url_for('auth.update_user') }}" method="POST">
+
+        {{ form.hidden_tag() }}
+        {{ form.user_name.label(class='text-light', value=current_user.user_name) }}
+        {{ form.user_name(class='text-dark') }}
+        {{ form.password.label(class='text-light') }}
+        {{ form.password(class='text-dark') }}
+        {{ form.email_id.label(class='text-light') }}
+        {{ form.email_id(class='text-dark') }}
+        {{ form.phone_number.label(class='text-light') }}
+        {{ form.phone_number(class='text-dark') }}
+        {{ form.address.label(class='text-light') }}
+        {{ form.address(class='text-dark') }}
+        {{ form.submit(class="btn btn-primary text-center") }}
+
+    </form>
 
 
 

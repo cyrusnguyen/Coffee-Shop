@@ -36,7 +36,7 @@
                     <br>
 
 
-                    <a type="button" class="btn btn-primary" href="{{ url_for('main.update_user') }}">
+                    <a type="button" class="btn btn-primary" href="{{ url_for('auth.update_user') }}">
                         Update Information
                     </a>
                     <br>
@@ -45,7 +45,7 @@
                         Cart
                     </button>
                     <!-- The Modal -->
-                    <div class="modal" id="history_Modal">
+                    <div class="modal modal-lg" id="history_Modal">
                         <div class="modal-dialog modal-dialog-scrollable">
                             <div class="modal-content text-dark">
 
@@ -65,6 +65,28 @@
                                                 <p>CartID | {{cart.cart_id}}</p>
                                                 <p>Quantity | {{cart.total_quantity}}</p>
                                                 <p>Total | ${{cart.subtotal}}</p>
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                              <th scope="col">Product Name</th>
+                                                              <th scope="col">Price</th>
+                                                              <th scope="col">Quantity</th>
+                                                              <th scope="col">Subtotal</th>
+                                                            </tr>
+                                                          </thead>
+                                                        <tbody>
+                                                            {% for product in cart.cart_products %}
+                                                            <tr>
+                                                              <th scope="row">{{product.name}}</th>
+                                                              <td>{{product.price}}</td>
+                                                              <td>{{product.quantity}}</td>
+                                                              <td>{{product.total}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                          </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                        
@@ -83,40 +105,6 @@
             </div>
         </div>
         
-        <div class=" col-12 p-5">
-            <div class="item_form">
-                <div class="text">
-                    <h2 class="my-4">Your Unpublished Products</h2>
-                </div>
-
-                <div class="row text-light">
-                    <!--Grid column-->
-
-                    
-                        
-                        {% for product in product %}
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="card">
-                                <img src="{{ url_for('static', filename = 'img/' + product.image)}}" class="img-fluid">
-                                <div class="card-body">
-                                    <h3 class="title"><a href="{{ url_for('product.show', id = product.id) }}">{{product.name}}</a></h3> 
-                                    <p class="text" style="color:black">{{product.style}}</p>
-                                    <h5 class="title">Where</h5>
-                                    <p class="text" style="color:black">{{product.city + ", " + product.country}}</p>
-                                    <h5 class="title">When</h5>
-                                    <p class="text" style="color:black">{{product.date_end}}</p>
-                                    <a href="{{ url_for('product.show', id = product.id) }}" class="card-btm btn btn-primary py-1 px-2"> More</a>
-                                </div>
-                                <div class="{{'card-footer ' ~ product.status.lower() | replace(' ', '_')}}">
-                                    <small class="text-muted ">{{product.status}}</small>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    
-
-                </div>
-            </div>
         </div>             
 
       

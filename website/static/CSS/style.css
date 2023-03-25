@@ -19,14 +19,22 @@ a {
     color: rgb(180, 0, 0);
 }
 .modal {
-    width: 700px;
+    width: 500px;
     height: 100%;
-    position: absolute;
+    position: fixed !important;
     left: 50%;
-    top: 50%; 
-    margin-left: -200px;
+    top: 20%; 
+    margin-left: -100px;
     margin-top: -100px;
  }
+#history_Modal {
+    overflow: auto; 
+}
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: scroll;
+}
+
 .navbar-dark .navbar-toggler,
 .navbar-toggler-icon {
     color: rgb(0, 255, 119);
@@ -67,8 +75,12 @@ h2 {
 }
 
 
+/* #history_Modal .table-responsive{
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
 
-
+} */
 .sold_out {
     color: rgba(0, 162, 255, 0.3)
 }
@@ -135,10 +147,36 @@ h2 {
     clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
     opacity: 0.8;
 }
+form .page-section{
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #d9d9d9;
+    width: 50%;
+    margin: auto;
+    margin-top: 50px;
+}
+.page-section input, .page-section textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+}
 
+label {
+    font-weight: bold;	
+}
+@media only screen and (max-width: 600px) {
+    form {
+        width: 80%;
+    }
+}
 
 .div-r{
-    padding: 40px;
+    margin-top: 70px;
+    padding: 50px;
+    z-index: 2;
 }
 
 .carousel-title{
@@ -161,6 +199,7 @@ div.form-field-contact-input {
 .carousel-control-prev,
 .carousel-control-next {
     width: 15%;
+    z-index: 3;
 }
 
 .carousel-control-prev-icon,
@@ -379,7 +418,7 @@ form.example::after {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 90%;
     background-color: rgba(255, 255, 255, 0.907);
     background-clip: padding-box;
     border: 1px solid rgb(255, 255, 255);

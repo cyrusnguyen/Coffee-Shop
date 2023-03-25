@@ -90,7 +90,7 @@ class PurchaseProductForm(FlaskForm):
     submit = SubmitField("Add to Cart")
     
 
-# Update form
+# Update user form
 class Updateform(FlaskForm):
     user_name = StringField("User Name", validators=[InputRequired()])
     email_id = StringField("Email Address", validators=[
