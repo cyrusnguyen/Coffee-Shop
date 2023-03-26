@@ -161,14 +161,17 @@ def purchase():
                     price = product['product_dict']['price']
                 )
                 remaining_products = product['product_dict']['quantity'] -  product['quantity']
+                new_sold_quantity = product['product_dict']['sold_quantity'] + product['quantity']
                 if remaining_products < 1:
                     db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
                         quantity = remaining_products,
+                        sold_quantity = new_sold_quantity,
                         status = "Sold Out"
                     ))
                 else:
                     db.session.query(Product).filter_by(product_id = product['product_dict']['product_id']).update(dict(
-                            quantity = remaining_products
+                            quantity = remaining_products,
+                            sold_quantity = new_sold_quantity
                         ))
                 db.session.add(new_cart_product)
             db.session.commit()
